@@ -1,4 +1,11 @@
 #!/usr/bin/php
 <?php
 
+namespace Codger\Generate;
+
+require_once getcwd().'/vendor/autoload.php';
+
+$codger = new Generator($argv[1]);
+var_dump($argv);
+var_dump(getcwd());
 
