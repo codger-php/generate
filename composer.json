@@ -12,7 +12,9 @@
     "bin": [
         "bin/codger"
     ],
-    "require": {},
+    "require": {
+        "twig/twig": "^2.5"
+    },
     "autoload": {
         "psr-4": {
             "Codger\\Generate\\": "./src"
