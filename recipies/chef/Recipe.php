@@ -86,7 +86,7 @@ class ChefMethod extends Codger\Generate\Recipe
     public function stir(int $number, int $bowl = 1) : ChefMethod
     {
         $this->put('', $bowl);
-        $this->minutes = $number;
+        $this->variables->minutes = $number;
         $this->template = 'methods/stir.html.twig';
         return $this;
     }
@@ -141,6 +141,7 @@ EOT
         (new ChefMethod($twig))->put('flour')->render(),
         (new ChefMethod($twig))->put('baking powder')->render(),
         (new ChefMethod($twig))->put('cocoa powder')->render(),
+        (new ChefMethod($twig))->stir(1)->render(),
     ])
     ->output('php://stdout');
 
