@@ -1,0 +1,4 @@
+Ingredients.
+{% for ingredient in ingredients %}
+{{ ingredient[0] }}{% if ingredient[3] %} {{ ingredient[3] }}{% endif %} {{ ingredient[1] }} {{ ingredient[2] }}
+{% endfor %}
