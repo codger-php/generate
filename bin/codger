@@ -5,7 +5,5 @@ namespace Codger\Generate;
 
 require_once getcwd().'/vendor/autoload.php';
 
-$codger = new Generator($argv[1]);
-var_dump($argv);
-var_dump(getcwd());
+require getcwd()."/recipies/{$argv[1]}/Recipe.php";
 
