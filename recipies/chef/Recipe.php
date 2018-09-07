@@ -142,6 +142,7 @@ EOT
         (new ChefMethod($twig))->put('baking powder')->render(),
         (new ChefMethod($twig))->put('cocoa powder')->render(),
         (new ChefMethod($twig))->stir(1)->render(),
+        (new ChefMethod($twig))->combine('double cream')->render(),
     ])
     ->output('php://stdout');
 
