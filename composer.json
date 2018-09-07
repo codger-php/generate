@@ -9,6 +9,9 @@
             "email": "marijn@monomelodies.nl"
         }
     ],
+    "bin": [
+        "bin/codger"
+    ],
     "require": {},
     "autoload": {
         "psr-4": {
