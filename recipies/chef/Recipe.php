@@ -90,6 +90,14 @@ class ChefMethod extends Codger\Generate\Recipe
         $this->template = 'methods/stir.html.twig';
         return $this;
     }
+    
+    public function pour(int $bowl = 1, int $dish = 1) : ChefMethod
+    {
+        $this->variables->bowl = $bowl;
+        $this->variables->dish = $dish;
+        $this->template = 'methods/pour.html.twig';
+        return $this;
+    }
 
     private function ordinal(int $ordinal) : string
     {
@@ -143,6 +151,9 @@ EOT
         (new ChefMethod($twig))->put('cocoa powder')->render(),
         (new ChefMethod($twig))->stir(1)->render(),
         (new ChefMethod($twig))->combine('double cream')->render(),
+        (new ChefMethod($twig))->stir(4)->render(),
+        (new ChefMethod($twig))->liquefyContents()->render(),
+        (new ChefMethod($twig))->pour()->render(),
     ])
     ->output('php://stdout');
 
