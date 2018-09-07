@@ -1,0 +1,23 @@
+{{ title }}.
+{% if comment %}
+
+{{ comment|raw }}
+{% endif %}
+
+{{ ingredients }}{% if cooking %}
+
+Cooking time: {{ cooking.time }} {{ cooking.unit }}.
+{% endif %}
+{% if oven %}
+
+Pre-heat oven to {{ oven.temperature }} degress Celcius{% if oven.gas %} (gas mark {{ oven.gas }}){% endif %}.
+{% endif %}
+
+Method.
+{% for instruction in instructions %}{{ instruction }}{% endfor %}
+{% if souschefs %}
+
+{% for souschef in souschefs %}
+{{ souschef }}
+{% endfor %}
+{% endif %}
