@@ -17,5 +17,8 @@
         "psr-4": {
             "Codger\\Generate\\": "./src"
         }
+    },
+    "require-dev": {
+        "toast/unit": "^1.3"
     }
 }
