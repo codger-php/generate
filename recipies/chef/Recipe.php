@@ -127,6 +127,7 @@ $ingredients->set('ingredients', [
     [0, 'g', 'cake mixture'],
 ]);
 
+$method = new ChefMethod($twig);
 $chef->setTitle('Hello World Cake with Chocolate sauce')
     ->set('comment', <<<EOT
 This prints hello world, while being tastier than Hello World Souffle. The main
@@ -142,18 +143,18 @@ EOT
     ->set('cooking', ['time' => 25, 'unit' => 'minutes'])
     ->set('oven', ['temperature' => 180])
     ->set('instructions', [
-        (new ChefMethod($twig))->put('chocolate chips')->render(),
-        (new ChefMethod($twig))->put('butter')->render(),
-        (new ChefMethod($twig))->put('sugar')->render(),
-        (new ChefMethod($twig))->put('beaten eggs')->render(),
-        (new ChefMethod($twig))->put('flour')->render(),
-        (new ChefMethod($twig))->put('baking powder')->render(),
-        (new ChefMethod($twig))->put('cocoa powder')->render(),
-        (new ChefMethod($twig))->stir(1)->render(),
-        (new ChefMethod($twig))->combine('double cream')->render(),
-        (new ChefMethod($twig))->stir(4)->render(),
-        (new ChefMethod($twig))->liquefyContents()->render(),
-        (new ChefMethod($twig))->pour()->render(),
+        $method->put('chocolate chips')->render(),
+        $method->put('butter')->render(),
+        $method->put('sugar')->render(),
+        $method->put('beaten eggs')->render(),
+        $method->put('flour')->render(),
+        $method->put('baking powder')->render(),
+        $method->put('cocoa powder')->render(),
+        $method->stir(1)->render(),
+        $method->combine('double cream')->render(),
+        $method->stir(4)->render(),
+        $method->liquefyContents()->render(),
+        $method->pour()->render(),
     ])
     ->output('php://stdout');
 
