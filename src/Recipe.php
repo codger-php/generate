@@ -71,7 +71,7 @@ abstract class Recipe
     public function ask(string $question, callable $callback) : Recipe
     {
         fwrite(STDOUT, $question.' ');
-        $answer = fscanf(STDIN, "%s\n");
+        $answer = trim(fgets(STDIN));
         $callback->call($this, $answer);
         return $this;
     }
@@ -94,8 +94,8 @@ abstract class Recipe
         foreach ($options as $index => $option) {
             fwrite(STDOUT, "[$index]: $option\n");
         }
-        $answer = fscanf(STDIN, "%s\n");
-        if (!array_key_exists($answer, $options)) {
+        $answer = fscanf(STDIN, "%s\n")[0];
+        if (!array_key_exists($answer, $options) && !in_array($answer, $options)) {
             fwrite(STDOUT, "Please select a valid option:\n");
             return $this->options('', $options, $callback);
         }
