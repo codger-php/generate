@@ -156,5 +156,15 @@ EOT
         $method->liquefyContents()->render(),
         $method->pour()->render(),
     ])
+    ->ask('What is the cake called?', function (string $title) : void {
+        if (strlen($title)) {
+            $this->setTitle($title);
+        }
+    })
+    ->options('Would sir like sauce with that?', ['y' => 'yes', 'n' => 'no'], function (string $answer) : void {
+        if (in_array($answer, ['y', 'yes'])) {
+            // Add sous-chef for chocolate sauce!
+        }
+    })
     ->output('php://stdout');
 
