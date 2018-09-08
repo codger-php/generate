@@ -70,6 +70,9 @@ abstract class Recipe
      */
     public function ask(string $question, callable $callback) : Recipe
     {
+        fwrite(STDOUT, $question.' ');
+        $answer = fscanf(STDIN, "%s\n");
+        $callback->call($this, $answer);
         return $this;
     }
 
@@ -85,6 +88,18 @@ abstract class Recipe
      */
     public function options(string $question, array $options, callable $callback) : Recipe
     {
+        if ($question) {
+            fwrite(STDOUT, "$question\n\n");
+        }
+        foreach ($options as $index => $option) {
+            fwrite(STDOUT, "[$index]: $option\n");
+        }
+        $answer = fscanf(STDIN, "%s\n");
+        if (!array_key_exists($answer, $options)) {
+            fwrite(STDOUT, "Please select a valid option:\n");
+            return $this->options('', $options, $callback);
+        }
+        $callback->call($this, $answer);
         return $this;
     }
 }
