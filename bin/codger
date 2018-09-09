@@ -32,5 +32,6 @@ EOT
     exit(Runner::ERROR_RECIPE_NOT_FOUND);
 }
 
-require "$dir/recipies/{$argv[1]}/Recipe.php";
+$runner = new Runner(require "$dir/recipies/{$argv[1]}/Recipe.php");
+$runner->run();
 
