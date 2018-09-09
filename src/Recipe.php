@@ -54,8 +54,10 @@ abstract class Recipe
      */
     public function output(string $filename) : Recipe
     {
-        $output = $this->render();
-        file_put_contents($filename, $output);
+        $this->output = function () use ($filename) {
+            $output = $this->render();
+            file_put_contents($filename, $output);
+        };
         return $this;
     }
 
@@ -101,6 +103,20 @@ abstract class Recipe
         }
         $callback->call($this, $answer);
         return $this;
+    }
+
+    /**
+     * Process this recipe.
+     *
+     * @return void
+     */
+    public function process() : void
+    {
+        $this->output->call($this);
+    }
+
+    public function delegate()
+    {
     }
 }
 
