@@ -167,4 +167,5 @@ EOT
         }
     })
     ->output('php://stdout');
+return $chef;
 
