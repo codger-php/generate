@@ -3,7 +3,34 @@
 
 namespace Codger\Generate;
 
-require_once getcwd().'/vendor/autoload.php';
+$dir = getcwd();
+require_once "$dir/vendor/autoload.php";
 
-require getcwd()."/recipies/{$argv[1]}/Recipe.php";
+if (!isset($argv[1])) {
+    fwrite(STDERR, <<<EOT
+
+Pass at least one argument (the name of the recipe) to `vendor/bin/codger`.
+
+
+EOT
+    );
+    exit(Runner::ERROR_NO_RECIPE);
+}
+
+if (!file_exists("$dir/recipies/{$argv[1]}/Recipe.php")) {
+    fwrite(STDERR, <<<EOT
+
+Recipe `{$argv[1]}` could not be found in `$dir/recipies`.
+
+Make sure that:
+- A folder exists called {$argv[1]};
+- It contains at least a `Recipe.php`.
+
+
+EOT
+    );
+    exit(Runner::ERROR_RECIPE_NOT_FOUND);
+}
+
+require "$dir/recipies/{$argv[1]}/Recipe.php";
 
