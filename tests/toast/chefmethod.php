@@ -12,7 +12,7 @@ $generator = Wrapper::createObject(ChefMethod::class, $twig);
 
 return function () use ($twig, $generator): Generator {    
     
-    /** Take method tells us to get something from our fridge */
+    /** Take method */
     yield function () use ($twig, $generator) {
         $variables = ['ingredient' => 'yoghurt'];
         $template = $generator->take('yoghurt')->template;
@@ -20,64 +20,84 @@ return function () use ($twig, $generator): Generator {
         assert(strpos($result, 'Take yoghurt from refrigerator') !== false);
     };
     
-    /** Test put method */
-    yield function () use ($generator) {
-        assert($generator->put('blarps') instanceof ChefMethod);
+    /** put method */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'pepper', 'ordinal' => 1];
+        $template = $generator->put('pepper')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Put pepper into the mixing bowl') !== false);
     };
     
-    /** Test fold method */
-    yield function () use ($generator) {
-        assert($generator->fold('blarps') instanceof ChefMethod);
+    /** fold method */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'dough', 'ordinal' => 1];
+        $template = $generator->fold('dough')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Fold dough into the mixing bowl') !== false);
     };
     
-    /** Test add method */
-    yield function () use ($generator) {
-        assert($generator->add('blarps') instanceof ChefMethod);
+    /** add method */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'bacon', 'ordinal' => 1];
+        $template = $generator->add('bacon')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Add bacon') !== false);
     };
     
-    /** Test remove method */
-    yield function () use ($generator) {
-        assert($generator->remove('blarps') instanceof ChefMethod);
+    /** remove method */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'olives', 'ordinal' => 1];
+        $template = $generator->remove('olives')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Remove olives') !== false);
     };
     
-    /** Test combine method */
-    yield function () use ($generator) {
-        assert($generator->combine('blarps') instanceof ChefMethod);
+    /** combine method */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'cheese', 'ordinal' => 1];
+        $template = $generator->combine('cheese')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Combine cheese') !== false);
     };
     
-    /** Test divide method */
-    yield function () use ($generator) {
-        assert($generator->divide('blarps') instanceof ChefMethod);
+    /** divide method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'banana', 'ordinal' => 1];
+        $template = $generator->divide('banana')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Divide banana') !== false);
     };
     
-    /** Test dry method */
-    yield function () use ($generator) {
-        assert($generator->dry() instanceof ChefMethod);
+    /** dry method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['ordinal' => 1];
+        $template = $generator->dry(1)->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Add dry ingredients') !== false);
     };
     
-    /** Test liquefy method */
-    yield function () use ($generator) {
-        assert($generator->liquefy('blarps') instanceof ChefMethod);
+    /** liquefyContents method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['ordinal' => 1];
+        $template = $generator->liquefyContents(1)->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Liquefy contents of the mixing bowl') !== false);
     };
     
-    /** Test liquefy method */
-    yield function () use ($generator) {
-        assert($generator->liquefy('blarps') instanceof ChefMethod);
+    /** stir method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['ordinal' => 1, 'minutes' => 4];
+        $template = $generator->stir(4)->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Stir for 4 minutes') !== false);
     };
     
-    /** Test liquefyContents method */
-    yield function () use ($generator) {
-        assert($generator->liquefyContents() instanceof ChefMethod);
-    };
-    
-    /** Test stir method */
-    yield function () use ($generator) {
-        assert($generator->stir(1) instanceof ChefMethod);
-    };
-    
-    /** Test pour method */
-    yield function () use ($generator) {
-        assert($generator->pour(1) instanceof ChefMethod);
+    /** pour method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['bowl' => 1, 'dish' => 1];
+        $template = $generator->pour(1, 1)->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Pour contents of the mixing bowl into the baking dish') !== false);
     };
 };
 
