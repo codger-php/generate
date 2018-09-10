@@ -16,5 +16,12 @@ class Runner
     {
         $this->recipe->process();
     }
+
+    public function arguments() : array
+    {
+        global $argv;
+        unset($argv[0], $argv[1]);
+        return $argv;
+    }
 }
 
