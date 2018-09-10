@@ -1,7 +1,7 @@
 <?php
 
 use Codger\Generate\Demo\ChefRecipe;
-use Codger\Generate\Demo\Method;
+use Codger\Generate\Demo\ChefMethod;
 
 $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
 unset($argv[0], $argv[1]);
