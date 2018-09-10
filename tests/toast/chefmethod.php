@@ -6,13 +6,18 @@ use Codger\Generate\Demo\ChefMethod;
 /**
  * Code helper
  */
-$generator = Wrapper::createObject(ChefMethod::class, new Twig_Environment(new Twig_Loader_Filesystem(__DIR__)));
 
-return function () use ($generator): Generator {    
+$twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
+$generator = Wrapper::createObject(ChefMethod::class, $twig);
+
+return function () use ($twig, $generator): Generator {    
     
-    /** Test take method */
-    yield function () use ($generator) {
-        assert($generator->take('blarps') instanceof ChefMethod);
+    /** Take method tells us to get something from our fridge */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'yoghurt'];
+        $template = $generator->take('yoghurt')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Take yoghurt from refrigerator') !== false);
     };
     
     /** Test put method */
