@@ -127,12 +127,14 @@ abstract class Recipe
     /**
      * Delegate to a sub-recipe.
      *
-     * @param Codger\Generate\Recipe $recipe
+     * @param string $path Path to sub-recipe.
+     * @param string ...$args Extra arguments.
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function delegate(Recipe $recipe) : Recipe
+    public function delegate(string $path, string ...$args) : Recipe
     {
-        $recipe->process();
+        $runner = new Runner($path);
+        $runner->run(...$args);
         return $this;
     }
 }
