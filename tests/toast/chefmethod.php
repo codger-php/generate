@@ -7,7 +7,7 @@ use Codger\Generate\Demo\ChefMethod;
  * Code helper
  */
 
-$twig = new Twig_Environment(new Twig_Loader_Filesystem('../../recipies/chef'));
+$twig = new Twig_Environment(new Twig_Loader_Filesystem('recipies/chef'));
 $generator = Wrapper::createObject(ChefMethod::class, $twig);
 
 return function () use ($twig, $generator): Generator {    
