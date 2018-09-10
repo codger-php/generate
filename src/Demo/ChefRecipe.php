@@ -1,6 +1,6 @@
 <?php
 
-namespace Coder\Generate\Demo;
+namespace Codger\Generate\Demo;
 
 use Codger\Generate\Recipe;
 use Twig_Environment;
