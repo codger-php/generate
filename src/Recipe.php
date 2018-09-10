@@ -20,7 +20,6 @@ abstract class Recipe
      */
     public function __construct(Twig_Environment $twig, string ...$args)
     {
-        var_dump($args);
         $this->variables = new StdClass;
         $this->twig = $twig;
     }
@@ -36,6 +35,15 @@ abstract class Recipe
     {
         $this->variables->$name = $value;
         return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function get(string $name)
+    {
+        return $this->variables->$name ?? null;
     }
 
     /**
