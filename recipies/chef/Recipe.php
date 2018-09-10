@@ -4,9 +4,12 @@ class ChefRecipe extends Codger\Generate\Recipe
 {
     protected $template = 'main.html.twig';
 
-    public function __construct(Twig_Environment $twig, string $title)
+    public function __construct(Twig_Environment $twig, string $title = '')
     {
-        parent::__construct($twig, $title);
+        parent::__construct($twig);
+        if (strlen($title)) {
+            $this->setTitle($title);
+        }
     }
 
     public function setTitle(string $title) : ChefRecipe
@@ -118,7 +121,7 @@ class ChefMethod extends Codger\Generate\Recipe
 $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
 unset($argv[0], $argv[1]);
 $chef = new ChefRecipe($twig, ...$argv);
-$ingredients = new class($twig, 'Ingredients') extends ChefRecipe {
+$ingredients = new class($twig) extends ChefRecipe {
     protected $template = 'ingredients.html.twig';
 };
 $ingredients->set('ingredients', [
@@ -134,8 +137,7 @@ $ingredients->set('ingredients', [
 ]);
 
 $method = new ChefMethod($twig);
-$chef->setTitle('Hello World Cake with Chocolate sauce')
-    ->set('comment', <<<EOT
+$chef->set('comment', <<<EOT
 This prints hello world, while being tastier than Hello World Souffle. The main
 chef makes a " world!" cake, which he puts in the baking dish. When he gets the
 sous chef to make the "Hello" chocolate sauce, it gets put into the baking dish
@@ -161,13 +163,17 @@ EOT
         $method->stir(4)->render(),
         $method->liquefyContents()->render(),
         $method->pour()->render(),
-    ])
-    ->ask('What is the cake called?', function (string $title) : void {
+    ]);
+if (!strlen($chef->get('title'))) {
+    $chef->ask('What is the cake called?', function (string $title) : void {
         if (strlen($title)) {
             $this->setTitle($title);
+        } else {
+            $this->setTitle('Hello World Cake with Chocolate sauce');
         }
-    })
-    ->options('Would sir like sauce with that?', ['y' => 'yes', 'n' => 'no'], function (string $answer) : void {
+    });
+}
+$chef->options('Would sir like sauce with that?', ['y' => 'yes', 'n' => 'no'], function (string $answer) : void {
         if (in_array($answer, ['y', 'yes'])) {
             // Add sous-chef for chocolate sauce!
         }
