@@ -16,9 +16,8 @@ abstract class Recipe
      * it (cache dir, loader, debug etc).
      *
      * @param Twig_Environment $twig
-     * @param string ...$args Optional additional command line arguments.
      */
-    public function __construct(Twig_Environment $twig, string ...$args)
+    public function __construct(Twig_Environment $twig)
     {
         $this->variables = new StdClass;
         $this->twig = $twig;
