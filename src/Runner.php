@@ -16,8 +16,12 @@ class Runner
 
     public function run(string ...$argv) : void
     {
-        $recipe = require $this->path;
-        $recipe->process();
+        if (file_exists($this->path)) {
+            $recipe = require $this->path;
+            call_user_func($recipe, ...$argv)->process();
+        } else {
+            fwrite(STDERR, "Recipe {$this->path} could not be found, skipping...\n");
+        }
     }
 
     public static function arguments() : array
