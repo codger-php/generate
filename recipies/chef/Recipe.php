@@ -1,5 +1,6 @@
 <?php
 
+use Codger\Generate\Runner;
 use Codger\Generate\Demo\ChefRecipe;
 use Codger\Generate\Demo\ChefMethod;
 
