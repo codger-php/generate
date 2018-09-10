@@ -56,21 +56,6 @@ abstract class Recipe
     }
 
     /**
-     * Output the rendered template to $filename.
-     *
-     * @param string $filename
-     * @return Codger\Generate\Recipe Itself for chaining.
-     */
-    public function output(string $filename) : Recipe
-    {
-        $this->output = function () use ($filename) {
-            $output = $this->render();
-            file_put_contents($filename, $output);
-        };
-        return $this;
-    }
-
-    /**
      * Ask the user a free-form question. The answer is passed to `$callback` as
      * an argument. Note that `$callback` is called with the current recipe as
      * its scope (`$this`).
@@ -115,6 +100,21 @@ abstract class Recipe
     }
 
     /**
+     * Output the rendered template to $filename.
+     *
+     * @param string $filename
+     * @return Codger\Generate\Recipe Itself for chaining.
+     */
+    public function output(string $filename) : Recipe
+    {
+        $this->output = function () use ($filename) {
+            $output = $this->render();
+            file_put_contents($filename, $output);
+        };
+        return $this;
+    }
+
+    /**
      * Process this recipe.
      *
      * @return void
@@ -124,8 +124,16 @@ abstract class Recipe
         $this->output->call($this);
     }
 
-    public function delegate()
+    /**
+     * Delegate to a sub-recipe.
+     *
+     * @param Codger\Generate\Recipe $recipe
+     * @return Codger\Generate\Recipe Itself for chaining.
+     */
+    public function delegate(Recipe $recipe) : Recipe
     {
+        $recipe->process();
+        return $this;
     }
 }
 
