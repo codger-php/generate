@@ -7,14 +7,17 @@ class Runner
     const ERROR_NO_RECIPE = 1;
     const ERROR_RECIPE_NOT_FOUND = 2;
 
-    public function __construct(Recipe $recipe)
+    private $path;
+
+    public function __construct(string $path)
     {
-        $this->recipe = $recipe;
+        $this->path = $path;
     }
 
-    public function run() : void
+    public function run(string ...$argv) : void
     {
-        $this->recipe->process();
+        $recipe = require $this->path;
+        $recipe->process();
     }
 
     public static function arguments() : array
