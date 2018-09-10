@@ -4,8 +4,7 @@ use Codger\Generate\Demo\ChefRecipe;
 use Codger\Generate\Demo\ChefMethod;
 
 $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
-unset($argv[0], $argv[1]);
-$chef = new ChefRecipe($twig, ...$argv);
+$chef = new ChefRecipe($twig, ...Runner::arguments());
 $ingredients = new class($twig) extends ChefRecipe {
     protected $template = 'ingredients.html.twig';
 };
