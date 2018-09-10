@@ -4,6 +4,11 @@ class ChefRecipe extends Codger\Generate\Recipe
 {
     protected $template = 'main.html.twig';
 
+    public function __construct(Twig_Environment $twig, string $title)
+    {
+        parent::__construct($twig, $title);
+    }
+
     public function setTitle(string $title) : ChefRecipe
     {
         return $this->set('title', $title);
@@ -111,8 +116,9 @@ class ChefMethod extends Codger\Generate\Recipe
 }
 
 $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
-$chef = new ChefRecipe($twig);
-$ingredients = new class($twig) extends ChefRecipe {
+unset($argv[0], $argv[1]);
+$chef = new ChefRecipe($twig, ...$argv);
+$ingredients = new class($twig, 'Ingredients') extends ChefRecipe {
     protected $template = 'ingredients.html.twig';
 };
 $ingredients->set('ingredients', [
