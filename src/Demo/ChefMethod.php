@@ -99,6 +99,13 @@ class ChefMethod extends Recipe
         $this->template = 'methods/liquefyContents.html.twig';
         return $this;
     }
+    
+    public function agitate(string $what) : ChefMethod
+    {
+        $this->put($what);
+        $this->template = 'methods/agitate.html.twig';
+        return $this;
+    }
 
     private function ordinal(int $ordinal) : string
     {
