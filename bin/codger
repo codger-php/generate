@@ -17,7 +17,7 @@ EOT
     exit(Runner::ERROR_NO_RECIPE);
 }
 
-if (!file_exists("$dir/recipies/{$argv[1]}/Recipe.php")) {
+if (!file_exists("$dir/recipes/{$argv[1]}/Recipe.php")) {
     fwrite(STDERR, <<<EOT
 
 Recipe `{$argv[1]}` could not be found in `$dir/recipies`.
@@ -32,6 +32,6 @@ EOT
     exit(Runner::ERROR_RECIPE_NOT_FOUND);
 }
 
-$runner = new Runner("$dir/recipies/{$argv[1]}/Recipe.php");
+$runner = new Runner($argv[1]);
 $runner->run(...Runner::arguments());
 
