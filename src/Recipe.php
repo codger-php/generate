@@ -107,7 +107,7 @@ abstract class Recipe
      */
     public function output(string $filename) : Recipe
     {
-        $this->output = function () use ($filename) {
+        $this->output = function () use ($filename) : void {
             $output = $this->render();
             file_put_contents($filename, $output);
         };
@@ -121,7 +121,11 @@ abstract class Recipe
      */
     public function process() : void
     {
-        $this->output->call($this);
+        if (isset($this->output)) {
+            $this->output->call($this);
+        } else {
+            fwrite(STDERR, "Recipe is missing a call to `output`, not very useful probably...");
+        }
     }
 
     /**
