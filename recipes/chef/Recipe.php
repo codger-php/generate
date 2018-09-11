@@ -22,6 +22,17 @@ return function (string ...$args) : ChefRecipe {
         [0, 'g', 'cake mixture'],
     ]);
 
+    $sauceIngredients = new class($twig) extends ChefRecipe {
+        protected $template = 'ingredients.html.twig';
+    };
+    $sauceIngredients->set('ingredients', [
+        [111, 'g', 'sugar'],
+        [108, 'ml', 'hot water'],
+        [108, 'ml', 'heated double cream'],
+        [101, 'g', 'dark chocolate'],
+        [72, 'g', 'milk chocolate']
+    ]);
+
     $method = new ChefMethod($twig);
     $chef->set('comment', <<<EOT
 This prints hello world, while being tastier than Hello World Souffle. The main
