@@ -99,5 +99,13 @@ return function () use ($twig, $generator): Generator {
         $result = $twig->render($template, $variables);
         assert(strpos($result, 'Pour contents of the mixing bowl into the baking dish') !== false);
     };
+    
+    /** clean method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['ordinal' => 1];
+        $template = $generator->clean(1)->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Clean the mixing bowl') !== false);
+    };
 };
 
