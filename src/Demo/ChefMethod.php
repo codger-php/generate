@@ -92,6 +92,13 @@ class ChefMethod extends Recipe
         $this->template = 'methods/pour.html.twig';
         return $this;
     }
+    
+    public function clean(int $bowl = 1) :ChefMethod
+    {
+        $this->put('', $bowl);
+        $this->template = 'methods/liquefyContents.html.twig';
+        return $this;
+    }
 
     private function ordinal(int $ordinal) : string
     {
