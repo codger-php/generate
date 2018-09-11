@@ -3,10 +3,6 @@
 use Gentry\Gentry\Wrapper;
 use Codger\Generate\Demo\ChefMethod;
 
-/**
- * Code helper
- */
-
 $twig = new Twig_Environment(new Twig_Loader_Filesystem('recipes/chef'));
 $generator = Wrapper::createObject(ChefMethod::class, $twig);
 
