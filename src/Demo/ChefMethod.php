@@ -96,7 +96,7 @@ class ChefMethod extends Recipe
     public function clean(int $bowl = 1) :ChefMethod
     {
         $this->put('', $bowl);
-        $this->template = 'methods/liquefyContents.html.twig';
+        $this->template = 'methods/clean.html.twig';
         return $this;
     }
     
