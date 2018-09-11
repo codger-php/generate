@@ -107,5 +107,29 @@ return function () use ($twig, $generator): Generator {
         $result = $twig->render($template, $variables);
         assert(strpos($result, 'Clean the mixing bowl') !== false);
     };
+    
+    /** agitate method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'chocolate'];
+        $template = $generator->agitate('chocolate')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Agitate the chocolate until dissolved') !== false);
+    };
+    
+    /** dissolve method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['ingredient' => 'chocolate'];
+        $template = $generator->dissolve('chocolate')->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Dissolve the chocolate') !== false);
+    };
+    
+    /** refrigerate method  */
+    yield function () use ($twig, $generator) {
+        $variables = ['hours' => 4];
+        $template = $generator->refrigerate(4)->template;
+        $result = $twig->render($template, $variables);
+        assert(strpos($result, 'Refrigerate for 4 hours') !== false);
+    };
 };
 
