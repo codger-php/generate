@@ -20,7 +20,7 @@ EOT
 if (!file_exists("$dir/recipes/{$argv[1]}/Recipe.php")) {
     fwrite(STDERR, <<<EOT
 
-Recipe `{$argv[1]}` could not be found in `$dir/recipies`.
+Recipe `{$argv[1]}` could not be found in `$dir/recipes`.
 
 Make sure that:
 - A folder exists called {$argv[1]};
