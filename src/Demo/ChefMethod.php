@@ -113,6 +113,13 @@ class ChefMethod extends Recipe
         $this->template = 'methods/dissolve.html.twig';
         return $this;
     }
+    
+    public function refrigerate(int $number) : ChefMethod
+    {
+        $this->variables->hours = $number;
+        $this->template = 'methods/refrigerate.html.twig';
+        return $this;
+    }
 
     private function ordinal(int $ordinal) : string
     {
