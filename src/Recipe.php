@@ -124,7 +124,7 @@ abstract class Recipe
         if (isset($this->output)) {
             $this->output->call($this);
         } else {
-            fwrite(STDERR, "Recipe is missing a call to `output`, not very useful probably...");
+            fwrite(STDERR, "Recipe is missing a call to `output`, not very useful probably...\n");
         }
     }
 
