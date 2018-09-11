@@ -15,11 +15,18 @@ class ChefRecipe extends Recipe
         if (strlen($title)) {
             $this->setTitle($title);
         }
+        $this->variables->souschefs = [];
     }
 
     public function setTitle(string $title) : ChefRecipe
     {
         return $this->set('title', $title);
+    }
+
+    public function addSousChef(ChefRecipe $recipe) : ChefRecipe
+    {
+        $this->variables->souschefs[] = $recipe->render();
+        return $this;
     }
 }
 
