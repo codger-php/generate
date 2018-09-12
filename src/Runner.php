@@ -25,20 +25,27 @@ class Runner
             $reflection = new ReflectionFunction($recipe);
             if ($reflection->getNumberOfRequiredParameters() > count($argv)) {
                 $wanteds = $reflection->getParameters();
-                $usage = call_user_func(function (array &$wanteds) : string {
+                $usage = call_user_func(function () use (&$wanteds) : string {
                     $param = array_shift($wanteds);
                     $out = '';
                     if ($param->isOptional()) {
                         $out .= ' [';
                     }
-                    $out .= $param->getName();
+                    $out .= strtoupper($param->getName());
                     if ($wanteds) {
-                        $out .= call_user_func(__FUNCTION__, $wanteds);
+                        $out .= call_user_func(__FUNCTION__);
                     }
-                    $out .= ']';
+                    if ($param->isOptional()) {
+                        $out .= ']';
+                    }
                     return $out;
-                });
-                fwrite(STDERR, "Usage: `$ vendir/bin/codger {$this->recipe} $usage\n");
+                }, $wanteds);
+                fwrite(STDERR, "\nUsage: `$ vendor/bin/codger {$this->recipe} $usage`\n\n");
+                if ($docComment = $reflection->getDocComment()) {
+                    $docComment = preg_replace("@(^/\*\*\n|\n\s?\*/$)@", '', $docComment);
+                    $docComment = preg_replace("@^\s?\*\s?@m", '', $docComment);
+                    fwrite(STDERR, "$docComment\n\n");
+                }
             } else {
                 call_user_func($recipe, ...$argv)->process();
             }
