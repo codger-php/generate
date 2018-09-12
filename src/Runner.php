@@ -15,10 +15,7 @@ class Runner
     public function __construct(string $recipe, string $path = null)
     {
         $this->recipe = $recipe;
-        if (!$path) {
-            $path = getcwd();
-        }
-        $this->path = $path;
+        $this->path = $path ?? getcwd();
     }
 
     public function run(string ...$argv) : void
