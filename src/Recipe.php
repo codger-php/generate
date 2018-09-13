@@ -109,6 +109,10 @@ abstract class Recipe
     {
         $this->output = function () use ($filename) : void {
             $output = $this->render();
+            if (getenv("CODGER_DRY")) {
+                $output = "\n$filename:\n$output\n";
+                $filename = 'php://stdout';
+            }
             file_put_contents($filename, $output);
         };
         return $this;
