@@ -93,7 +93,7 @@ EOT
                 ]);
             $this->addSousChef($sauce);
         }
-    })->output('php://stdout');
+    })->output('/tmp/chef');
     return $chef;
 };
 
