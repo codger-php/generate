@@ -58,9 +58,10 @@ class Runner
     {
         $args = $GLOBALS['argv'];
         unset($args[0], $args[1]);
+        putenv("CODGER_DRY", true);
         foreach ($args as $key => $value) {
-            if ($value === '-d') {
-                putenv("CODGER_DRY", true);
+            if ($value === '-w') {
+                putenv("CODGER_DRY", false);
                 unset($args[$key]);
                 break;
             }
