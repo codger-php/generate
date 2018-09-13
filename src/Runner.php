@@ -18,7 +18,7 @@ class Runner
         $this->path = $path ?? getcwd();
     }
 
-    public function run(string ...$argv) : void
+    public function run(string ...$argv) :? Recipe
     {
         if (file_exists("{$this->path}/recipes/{$this->recipe}/Recipe.php")) {
             $recipe = require "{$this->path}/recipes/{$this->recipe}/Recipe.php";
@@ -46,19 +46,28 @@ class Runner
                     $docComment = preg_replace("@^\s?\*\s?@m", '', $docComment);
                     fwrite(STDERR, "$docComment\n\n");
                 }
+                return null;
             } else {
-                call_user_func($recipe, ...$argv)->process();
+                return call_user_func($recipe, ...$argv)->process();
             }
         } else {
             fwrite(STDERR, "Recipe `{$this->recipe}` could not be found in `{$this->path}/recipes`, skipping...\n");
+            return null;
         }
     }
 
     public static function arguments() : array
     {
-        global $argv;
-        unset($argv[0], $argv[1]);
-        return $argv;
+        $args = $GLOBALS['argv'];
+        unset($args[0], $args[1]);
+        foreach ($args as $key => $value) {
+            if ($value === '-d') {
+                putenv("CODGER_DRY", true);
+                unset($args[$key]);
+                break;
+            }
+        }
+        return array_values($args);
     }
 }
 
