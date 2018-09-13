@@ -28,6 +28,9 @@ $ composer require --dev codger/generate
 $ vendor/bin/codger name-of-recipe some additional arguments
 ```
 
+To actually write files (Codger defaults to outputting to `STDOUT`) pass the
+`-w` flag ("write") as any argument.
+
 ## Writing recipes
 Recipies are expected to be stored in a `recipes` folder in the root of your
 project (i.e., next to the `vendor` folder Composer creates).
