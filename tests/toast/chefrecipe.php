@@ -64,8 +64,8 @@ return function () use ($twig, $generator) : Generator {
 
         /** The output method writes to a file and we can confirm that the file exists */
         yield function () use ($generator) {
-            $generator->output('cooking.log');
-            assert(file_exists(__DIR__.'/../../cooking.log'));
+            $generator->output(sys_get_temp_dir().'/cooking.log');
+            assert(file_exists(sys_get_temp_dir().'/cooking.log'));
         };
         
         /** Process returns null */
