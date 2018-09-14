@@ -16,10 +16,8 @@ abstract class Recipe
     protected $variables;
     /** @var bool */
     protected $delegated = false;
-    /** @var resource */
-    protected $in;
-    /** @var resource */
-    protected $out;
+    /** @var Codger\Generate\InOut */
+    protected $inout;
 
     /**
      * Constructor. Recipes must be constructed with a user-supplied
@@ -32,22 +30,19 @@ abstract class Recipe
     {
         $this->variables = new StdClass;
         $this->twig = $twig;
-        $this->in = STDIN;
-        $this->out = STDOUT;
+        $this->inout = new StandardInout;
     }
 
     /**
      * Set the input/output streams. This is useful for e.g. testing, but also
      * in other scenarios where you need to reroute input/output.
      *
-     * @param resource $in
-     * @param resource $out
+     * @param Codger\Generate\InOut $inout
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function setInOut($in, $out) : Recipe
+    public function setInOut(InOut $inout) : Recipe
     {
-        $this->in = $in;
-        $this->out = $out;
+        $this->inout = $inout;
         return $this;
     }
 
@@ -94,8 +89,8 @@ abstract class Recipe
      */
     public function ask(string $question, callable $callback) : Recipe
     {
-        fwrite($this->out, $question.' ');
-        $answer = trim(fgets($this->in));
+        $this->inout->write("$question ");
+        $answer = $this->inout->read();
         $callback->call($this, $answer);
         return $this;
     }
@@ -113,14 +108,14 @@ abstract class Recipe
     public function options(string $question, array $options, callable $callback) : Recipe
     {
         if ($question) {
-            fwrite($this->out, "$question\n\n");
+            $this->inout->write("$question\n\n");
         }
         foreach ($options as $index => $option) {
-            fwrite($this->out, "[$index]: $option\n");
+            $this->inout->write("[$index]: $option\n");
         }
-        $answer = fscanf($this->in, "%s\n")[0];
+        $answer = $this->inout->read("%s\n");
         if (!array_key_exists($answer, $options) && !in_array($answer, $options)) {
-            fwrite($this->out, "Please select a valid option:\n");
+            $this->inout->write("Please select a valid option:\n");
             return $this->options('', $options, $callback);
         }
         $callback->call($this, $answer);
@@ -184,7 +179,7 @@ abstract class Recipe
      */
     public function info(string $info) : Recipe
     {
-        fwrite($this->out, "\n$info\n");
+        $this->inout->write("\n$info\n");
         if (getenv("CODGER_DRY")) {
             $this->ask("\nPress enter to continue", function() {});
         }
