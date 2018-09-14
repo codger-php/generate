@@ -30,7 +30,7 @@ abstract class Recipe
     {
         $this->variables = new StdClass;
         $this->twig = $twig;
-        $this->inout = new StandardInout;
+        $this->inout = new StandardInOut;
     }
 
     /**
