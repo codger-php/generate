@@ -9,10 +9,10 @@ use Codger\Generate\Demo\ChefRecipe;
 
 $twig = new Twig_Environment(new Twig_Loader_Filesystem('recipes/chef'));
 $generator = Wrapper::createObject(ChefRecipe::class, $twig, 'Demo Recept');
-$input = fopen('php://memory', 'w');
-$generator->setInOut($input, fopen('php://memory', 'w'));
+$inout = Wrapper::createObject(Codger\Generate\FakeInOut::class);
+Codger\Generate\Recipe::setInOut($inout);
 
-return function () use ($twig, $generator, $input) : Generator {
+return function () use ($twig, $generator, $inout) : Generator {
     /** Test methods specific to ChefRecipe */
     yield function () use ($twig, $generator) : Generator {    
         /** setTitle modifies the title after which we can retrieve it with the get method */
@@ -29,7 +29,7 @@ return function () use ($twig, $generator, $input) : Generator {
     };
 
     /** Test base Recipe methods */
-    yield function () use ($generator, $input) : Generator {
+    yield function () use ($generator, $inout) : Generator {
         /** The set method sets a variable */
         yield function () use ($generator) {
             assert($generator->set('brood', 'bruin') instanceof ChefRecipe);
@@ -47,22 +47,21 @@ return function () use ($twig, $generator, $input) : Generator {
         };
         
         /** The ask method will throw a question after which it succesfully runs the callback */
-        yield function () use ($generator, $input) {
-            fwrite($input, 'mayonaise');
+        yield function () use ($generator, $inout) {
+            $inout->expect('mayonaise');
             $generator->ask('What sauce to go with your fries, sir?', function ($answer) {
-                var_dump($answer);
                 $this->set('sauce', $answer);
             });
             assert($generator->get('sauce') === 'mayonaise');
         };
         
         /** The options method allows us to present options and pass the answer to the callback */
-        yield function () use ($generator) {
-            $generator->options('How do you like your coffee?', ['b' => 'black', 'c' => 'cappucino'],
-                function ($answer) {
-                    $this->set('coffee', 'black');
-                }
-            );
+        yield function () use ($generator, $inout) {
+            $inout->expect('b');
+            $options = ['b' => 'black', 'c' => 'cappucino'];
+            $generator->options('How do you like your coffee?', $options, function ($answer) use ($options) {
+                $this->set('coffee', $options[$answer]);
+            });
             assert($generator->get('coffee') === 'black');
         };
 
@@ -73,6 +72,7 @@ return function () use ($twig, $generator, $input) : Generator {
                 unlink($file);
             }
             $generator->output($file);
+//            $inout->expect('Chocolate cake');
             $generator->process();
             assert(file_exists($file));
         };
@@ -83,7 +83,9 @@ return function () use ($twig, $generator, $input) : Generator {
         };
         
         /** The delegate method can refer to a recipe and return it */
-        yield function () use ($generator) {
+        yield function () use ($generator, $inout) {
+            $inout->expect('foo');
+            $inout->expect('n');
             assert($generator->delegate('chef') instanceof ChefRecipe);
         };
     };
