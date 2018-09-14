@@ -46,7 +46,7 @@ return function () use ($twig, $generator) : Generator {
         
         /** The ask method will throw a question after which it succesfully runs the callback */
         yield function () use ($generator) {
-            $result = $generator->ask('What sauce to go with your fries, sir?', function ($answer) {
+            $generator->ask('What sauce to go with your fries, sir?', function ($answer) {
                 $this->set('sauce', 'mayonaise');
             });
             assert($generator->get('sauce') === 'mayonaise');
