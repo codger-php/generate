@@ -17,7 +17,7 @@ abstract class Recipe
     /** @var bool */
     protected $delegated = false;
     /** @var Codger\Generate\InOut */
-    protected $inout;
+    protected static $inout;
 
     /**
      * Constructor. Recipes must be constructed with a user-supplied
@@ -30,7 +30,9 @@ abstract class Recipe
     {
         $this->variables = new StdClass;
         $this->twig = $twig;
-        $this->inout = new StandardInOut;
+        if (!isset(self::$inout)) {
+            self::$inout = new StandardInOut;
+        }
     }
 
     /**
@@ -38,12 +40,10 @@ abstract class Recipe
      * in other scenarios where you need to reroute input/output.
      *
      * @param Codger\Generate\InOut $inout
-     * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function setInOut(InOut $inout) : Recipe
+    public static function setInOut(InOut $inout) : void
     {
-        $this->inout = $inout;
-        return $this;
+        self::$inout = $inout;
     }
 
     /**
@@ -89,8 +89,8 @@ abstract class Recipe
      */
     public function ask(string $question, callable $callback) : Recipe
     {
-        $this->inout->write("$question ");
-        $answer = $this->inout->read();
+        self::$inout->write("$question ");
+        $answer = self::$inout->read();
         $callback->call($this, $answer);
         return $this;
     }
@@ -108,14 +108,14 @@ abstract class Recipe
     public function options(string $question, array $options, callable $callback) : Recipe
     {
         if ($question) {
-            $this->inout->write("$question\n\n");
+            self::$inout->write("$question\n\n");
         }
         foreach ($options as $index => $option) {
-            $this->inout->write("[$index]: $option\n");
+            self::$inout->write("[$index]: $option\n");
         }
-        $answer = $this->inout->read("%s\n");
+        $answer = self::$inout->read("%s\n");
         if (!array_key_exists($answer, $options) && !in_array($answer, $options)) {
-            $this->inout->write("Please select a valid option:\n");
+            self::$inout->write("Please select a valid option:\n");
             return $this->options('', $options, $callback);
         }
         if (!isset($options[$answer])) {
@@ -137,9 +137,10 @@ abstract class Recipe
             $output = $this->render();
             if (getenv("CODGER_DRY")) {
                 $output = "\n$filename:\n$output\n";
-                $filename = 'php://stdout';
+                self::$inout->write($output);
+            } else {
+                file_put_contents($filename, $output);
             }
-            file_put_contents($filename, $output);
         };
         return $this;
     }
@@ -182,7 +183,7 @@ abstract class Recipe
      */
     public function info(string $info) : Recipe
     {
-        $this->inout->write("\n$info\n");
+        self::$inout->write("\n$info\n");
         if (getenv("CODGER_DRY")) {
             $this->ask("\nPress enter to continue", function() {});
         }
