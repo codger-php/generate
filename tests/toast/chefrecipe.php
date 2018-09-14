@@ -13,14 +13,16 @@ $generator = Wrapper::createObject(ChefRecipe::class, $twig, 'Demo Recept');
 return function () use ($twig, $generator) : Generator {
     /** Test methods specific to ChefRecipe */
     yield function () use ($twig, $generator) : Generator {    
-        /** Test setTitle method */
+        /** setTitle modifies the title after which we can retrieve it with the get method */
         yield function () use ($generator) {
-            assert($generator->setTitle('blarps') instanceof ChefRecipe);
+            $generator->setTitle('blarps');
+            assert($generator->get('title') === 'blarps');
         };
         
-        /** Test addSousChef method */
+        /** addSousChef adds a souschef after which we can retrieve it with the get method */
         yield function () use ($twig, $generator) {
-            assert($generator->addSousChef(new ChefRecipe($twig)) instanceof ChefRecipe);
+            $chef = $generator->addSousChef(new ChefRecipe($twig, 'Knoflooksaus'));
+            assert(strpos($chef->get('souschefs')[0], 'Knoflooksaus') !== false);
         };
     };
 
