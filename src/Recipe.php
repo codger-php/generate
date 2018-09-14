@@ -153,5 +153,18 @@ abstract class Recipe
         $this->delegated = true;
         return $this;
     }
+
+    /**
+     * Display info to the user at a certain stage. The info is automatically
+     * postfixed by a newline.
+     *
+     * @param string $info
+     * @return Codger\Generate\Recipe Itself for chaining.
+     */
+    public function info(string $info) : Recipe
+    {
+        fwrite(STDOUT, "$info\n");
+        return $this;
+    }
 }
 
