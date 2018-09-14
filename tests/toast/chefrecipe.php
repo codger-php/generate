@@ -28,48 +28,52 @@ return function () use ($twig, $generator) : Generator {
 
     /** Test base Recipe methods */
     yield function () use ($generator) : Generator {    
-        /** Test set method */
+        /** The set method sets a variable */
         yield function () use ($generator) {
-            assert($generator->set('blarps', 'blarps') instanceof ChefRecipe);
+            assert($generator->set('brood', 'bruin') instanceof ChefRecipe);
         };
         
-        /** Test get method */
+        /** After which we can retrieve it using the get method */
         yield function () use ($generator) {
-            assert(is_string($generator->get('blarps')));
+            assert($generator->get('brood') === 'bruin');
         };
         
-        /** Test render method */
+        /** The render methods returns a string with our template + information */
         yield function () use ($generator) {
-            assert(is_string($generator->render()));
+            $generator->setTitle('Testing rendering');
+            assert(strpos($generator->render(), 'Testing rendering') !== false);
         };
         
-        /** Test ask method */
+        /** The ask method will throw a question after which it succesfully runs the callback */
         yield function () use ($generator) {
-            $question = $generator->ask('We\'re going to test this?', function ($answer) {
-                $this->set('answer', $answer);
+            $result = $generator->ask('What sauce to go with your fries, sir?', function ($answer) {
+                $this->set('sauce', 'mayonaise');
             });
-            assert($question instanceof ChefRecipe);
+            assert($generator->get('sauce') === 'mayonaise');
         };
         
-        /** Test options method */
+        /** The options method allows us to present options and pass the answer to the callback */
         yield function () use ($generator) {
-            $options = $generator->options('Want some coffee?', ['y' => 'Yes', 'n' => 'No'], function () {
-                return 'Have some coffee!';
-            });
-            assert($options instanceof ChefRecipe);
+            $generator->options('How do you like your coffee?', ['b' => 'black', 'c' => 'cappucino'],
+                function ($answer) {
+                    $this->set('coffee', 'black');
+                }
+            );
+            assert($generator->get('coffee') === 'black');
         };
 
-        /** Test output method */
+        /** The output method writes to a file and we can confirm that the file exists */
         yield function () use ($generator) {
-            assert($generator->output('blarps') instanceof ChefRecipe);
+            $generator->output('cooking.log');
+            assert(file_exists(__DIR__.'/../../cooking.log'));
         };
         
-        /** Test process method */
+        /** Process returns null */
         yield function () use ($generator) {
             assert($generator->process() === null);
         };
         
-        /** Test delegate method */
+        /** The delegate method can refer to a recipe and return it */
         yield function () use ($generator) {
             assert($generator->delegate('chef') instanceof ChefRecipe);
         };
