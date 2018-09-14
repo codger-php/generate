@@ -5,10 +5,17 @@ namespace Codger\Generate;
 use Twig_Environment;
 use StdClass;
 
+/**
+ * Base Recipe class all other recipes should extend.
+ */
 abstract class Recipe
 {
+    /** @var Twig_Environment */
     protected $twig;
+    /** @var StdClass */
     protected $variables;
+    /** @var bool */
+    protected $delegated = false;
 
     /**
      * Constructor. Recipes must be constructed with a user-supplied
@@ -127,8 +134,8 @@ abstract class Recipe
     {
         if (isset($this->output)) {
             $this->output->call($this);
-        } else {
-            fwrite(STDERR, "Recipe is missing a call to `output`, not very useful probably...\n");
+        } elseif (!$this->delegated) {
+            fwrite(STDERR, "Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
         }
     }
 
@@ -143,6 +150,7 @@ abstract class Recipe
     public function delegate(string $recipe, string $path = null, string ...$args) : Recipe
     {
         (new Runner($recipe, $path))->run(...$args);
+        $this->delegated = true;
         return $this;
     }
 }
