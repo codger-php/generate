@@ -156,14 +156,17 @@ abstract class Recipe
 
     /**
      * Display info to the user at a certain stage. The info is automatically
-     * postfixed by a newline.
+     * wrapped by newlines.
      *
      * @param string $info
      * @return Codger\Generate\Recipe Itself for chaining.
      */
     public function info(string $info) : Recipe
     {
-        fwrite(STDOUT, "$info\n");
+        fwrite(STDOUT, "\n$info\n");
+        if (getenv("CODGER_DRY")) {
+            $this->ask("\nPress enter to continue", function() {});
+        }
         return $this;
     }
 }
