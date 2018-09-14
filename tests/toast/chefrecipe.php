@@ -9,8 +9,10 @@ use Codger\Generate\Demo\ChefRecipe;
 
 $twig = new Twig_Environment(new Twig_Loader_Filesystem('recipes/chef'));
 $generator = Wrapper::createObject(ChefRecipe::class, $twig, 'Demo Recept');
+$input = fopen('php://memory', 'w');
+$generator->setInOut($input, fopen('php://memory', 'w'));
 
-return function () use ($twig, $generator) : Generator {
+return function () use ($twig, $generator, $input) : Generator {
     /** Test methods specific to ChefRecipe */
     yield function () use ($twig, $generator) : Generator {    
         /** setTitle modifies the title after which we can retrieve it with the get method */
@@ -27,7 +29,7 @@ return function () use ($twig, $generator) : Generator {
     };
 
     /** Test base Recipe methods */
-    yield function () use ($generator) : Generator {    
+    yield function () use ($generator, $input) : Generator {
         /** The set method sets a variable */
         yield function () use ($generator) {
             assert($generator->set('brood', 'bruin') instanceof ChefRecipe);
@@ -45,9 +47,11 @@ return function () use ($twig, $generator) : Generator {
         };
         
         /** The ask method will throw a question after which it succesfully runs the callback */
-        yield function () use ($generator) {
+        yield function () use ($generator, $input) {
+            fwrite($input, 'mayonaise');
             $generator->ask('What sauce to go with your fries, sir?', function ($answer) {
-                $this->set('sauce', 'mayonaise');
+                var_dump($answer);
+                $this->set('sauce', $answer);
             });
             assert($generator->get('sauce') === 'mayonaise');
         };
