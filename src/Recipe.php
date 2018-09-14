@@ -118,6 +118,9 @@ abstract class Recipe
             $this->inout->write("Please select a valid option:\n");
             return $this->options('', $options, $callback);
         }
+        if (!isset($options[$answer])) {
+            $answer = array_flip($options)[$answer];
+        }
         $callback->call($this, $answer);
         return $this;
     }
