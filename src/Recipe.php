@@ -142,8 +142,7 @@ abstract class Recipe
      */
     public function delegate(string $recipe, string $path = null, string ...$args) : Recipe
     {
-        $runner = new Runner($recipe, $path);
-        $runner->run(...$args);
+        (new Runner($recipe, $path))->run(...$args);
         return $this;
     }
 }
