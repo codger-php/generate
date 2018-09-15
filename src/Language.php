@@ -8,6 +8,7 @@ abstract class Language
     const TYPE_TABLE = 2;
     const TYPE_VARIABLE = 4;
     const TYPE_PATH = 8;
+    const TYPE_URL = 16;
 
     /**
      * Returns a pluralized version of the specified `$string`.
@@ -63,6 +64,8 @@ abstract class Language
                 return lcfirst(implode('', $parts));
             case self::TYPE_PATH:
                 return implode('/', $parts);
+            case self::TYPE_URL:
+                return strtolower(implode('/', $parts));
             default:
                 throw new DomainException("Please use one of the `TYPE_` constants on the `Codger\Php\Language` class as 2nd parameter.");
         }
