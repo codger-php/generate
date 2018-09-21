@@ -113,7 +113,7 @@ abstract class Recipe
         foreach ($options as $index => $option) {
             self::$inout->write("[$index]: $option\n");
         }
-        $answer = self::$inout->read("%s\n");
+        $answer = trim(self::$inout->read("%s\n"));
         if (!array_key_exists($answer, $options) && !in_array($answer, $options)) {
             self::$inout->write("Please select a valid option:\n");
             return $this->options('', $options, $callback);
