@@ -21,7 +21,7 @@ class FakeInOut implements InOut
     public function read(string $format = null) : string
     {
         $input = array_shift($this->stack);
-        if (isset($format)) {
+        if (isset($format, $input)) {
             $input = sprintf($format, $input);
         }
         return $input ?? '';
