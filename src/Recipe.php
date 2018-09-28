@@ -139,7 +139,15 @@ abstract class Recipe
                 $output = "\n$filename:\n$output\n";
                 self::$inout->write($output);
             } else {
-                file_put_contents($filename, $output);
+                $dir = dirname($filename);
+                if (file_exists($dir) && !is_dir($dir)) {
+                    self::$inout->error("$dir already exists, but is not a directory!");
+                } else {
+                    if (!file_exists($dir)) {
+                        mkdir($dir, 0755, true);
+                    }
+                    file_put_contents($filename, $output);
+                }
             }
         };
         return $this;
