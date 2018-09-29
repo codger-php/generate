@@ -31,6 +31,9 @@ class Runner
                     if ($param->isOptional()) {
                         $out .= '[';
                     }
+                    if ($param->isVariadic()) {
+                        $out .= '...';
+                    }
                     $out .= strtoupper($param->getName());
                     if ($wanteds) {
                         $out .= $tmp();
