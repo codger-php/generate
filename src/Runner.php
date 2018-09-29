@@ -64,7 +64,7 @@ class Runner
                     fwrite(STDERR, "$docComment\n\n");
                 }
             } else {
-                if (end($wanteds)->isVariadic()) {
+                if ($wanteds && end($wanteds)->isVariadic()) {
                     $this->options = array_splice($argv, count($wanteds) - 1);
                 }
                 $recipe->call($this, ...$argv)->process();
