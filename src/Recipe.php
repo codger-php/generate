@@ -146,7 +146,17 @@ abstract class Recipe
                     if (!file_exists($dir)) {
                         mkdir($dir, 0755, true);
                     }
-                    file_put_contents($filename, $output);
+                    $overwrite = false;
+                    if (file_exists($filename)) {
+                        $this->options("$filename already exists, overwrite or dump to screen?", ['o' => 'Overwrite', 'd' => 'Dump'], function ($answer) use (&$overwrite) {
+                            $overwrite = $answer == 'o';
+                        });
+                    }
+                    if (!file_exists($filename) || $overwrite) {
+                        file_put_contents($filename, $output);
+                    } else {
+                        self::$inout->write("\n$filename:\n$output\n");
+                    }
                 }
             }
         };
