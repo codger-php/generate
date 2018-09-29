@@ -173,7 +173,7 @@ abstract class Recipe
         if (isset($this->output)) {
             $this->output->call($this);
         } elseif (!$this->delegated) {
-            fwrite(STDERR, "Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
+            self::$inout->error("Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
         }
     }
 
