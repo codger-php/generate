@@ -14,7 +14,7 @@ class Runner
     /** @var string */
     private $path;
     /** @var array */
-    private $options;
+    private $options = [];
 
     /**
      * @param string $recipe The name of the recipe to run.
