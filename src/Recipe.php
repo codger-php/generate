@@ -172,10 +172,10 @@ abstract class Recipe
      *
      * @param string $recipe The name of the recipe to delegate to.
      * @param string|null $path Path to sub-recipe. Defaults to `cwd`.
-     * @param string ...$args Extra arguments.
+     * @param mixed ...$args Extra arguments.
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function delegate(string $recipe, string $path = null, string ...$args) : Recipe
+    public function delegate(string $recipe, string $path = null, ...$args) : Recipe
     {
         (new Runner($recipe, $path))->run(...$args);
         $this->delegated = true;
