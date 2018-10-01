@@ -32,14 +32,14 @@ To actually write files (Codger defaults to outputting to `STDOUT`) pass the
 `-w` flag ("write") as any argument.
 
 ## Writing recipes
-Recipies are expected to be stored in a `recipes` folder in the root of your
+Recipes are expected to be stored in a `recipes` folder in the root of your
 project (i.e., next to the `vendor` folder Composer creates).
 
 > Actually, they're expected in `cwd`, or the current working directory. If for
 > whatever reason you want or need to place your `recipes` directory elsewhere,
 > simply run `codger` from there, e.g. `$ /path/to/vendor/bin/codger recipe`.
 
-Each recipe needs at least a `Recipy.php` main file. This _must_ return a lambda
+Each recipe needs at least a `Recipe.php` main file. This _must_ return a lambda
 in turn returning an instance of a class extending `Codger\Generate\Recipy`. The
 arguments to the lambda are the additional command line arguments after the name
 of the recipe, in order. Inside the closure, the recipe class can do its thing
