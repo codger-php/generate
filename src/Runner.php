@@ -34,8 +34,15 @@ class Runner
      */
     public function run(...$argv) : void
     {
-        if (file_exists("{$this->path}/recipes/{$this->recipe}/Recipe.php")) {
-            $recipe = require "{$this->path}/recipes/{$this->recipe}/Recipe.php";
+        if (strpos($this->recipe, '/')) {
+            $vendor = substr($this->recipe, 0, strrpos($this->recipe, '/'));
+            $recipe = substr($this->recipe, strrpos($this->recipe, '/') + 1);
+            $file = "{$this->path}/vendor/$vendor/recipies/$recipe/Recipe.php";
+        } else {
+            $file = "{$this->path}/recipes/{$this->recipe}/Recipe.php";
+        }
+        if (file_exists($file)) {
+            $recipe = require $file;
             $reflection = new ReflectionFunction($recipe);
             $wanteds = $reflection->getParameters();
             if ($reflection->getNumberOfRequiredParameters() > count($argv)) {
