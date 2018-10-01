@@ -58,3 +58,19 @@ return function (string $some, string $argument) : Recipe {
 };
 ```
 
+For a recipe to be useful, it needs to either call
+`Codger\Generate\Recipe::output` to specify the intended output file, or
+delegate to another recipe (see below).
+
+## Delegating tasks
+Some recipes will want to make use of other recipes. This way you can "chain"
+recipes together to build more complex recipes. Delegating is done by calling
+the `Codger\Generate\Recipe::delegate` method.
+
+The first argument is the name of the recipe to delegate to. The second argument
+is the optional path to the child recipe (defaults to `cwd` when `null` is
+passed). Note this path should _not_ contain the `recipes` part; the base
+location of the package is sufficient. You can optionally include the
+vendor/package name to make the runner automatically look in `vendor`, e.g.:
+`vendor/bin/codger vendor/package/recipe`.
+
