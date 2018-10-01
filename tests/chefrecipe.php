@@ -72,13 +72,13 @@ return function () use ($twig, $generator, $inout) : Generator {
                 unlink($file);
             }
             $generator->output($file);
-//            $inout->expect('Chocolate cake');
             $generator->process();
             assert(file_exists($file));
         };
         
         /** Process returns null */
         yield function () use ($generator) {
+            putenv("CODGER_DRY=1");
             assert($generator->process() === null);
         };
         

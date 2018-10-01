@@ -146,7 +146,17 @@ abstract class Recipe
                     if (!file_exists($dir)) {
                         mkdir($dir, 0755, true);
                     }
-                    file_put_contents($filename, $output);
+                    $overwrite = false;
+                    if (file_exists($filename)) {
+                        $this->options("$filename already exists, overwrite or dump to screen?", ['o' => 'Overwrite', 'd' => 'Dump'], function ($answer) use (&$overwrite) {
+                            $overwrite = $answer == 'o';
+                        });
+                    }
+                    if (!file_exists($filename) || $overwrite) {
+                        file_put_contents($filename, $output);
+                    } else {
+                        self::$inout->write("\n$filename:\n$output\n");
+                    }
                 }
             }
         };
@@ -163,7 +173,7 @@ abstract class Recipe
         if (isset($this->output)) {
             $this->output->call($this);
         } elseif (!$this->delegated) {
-            fwrite(STDERR, "Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
+            self::$inout->error("Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
         }
     }
 

@@ -9,27 +9,44 @@ class Runner
     const ERROR_NO_RECIPE = 1;
     const ERROR_RECIPE_NOT_FOUND = 2;
 
+    /** @var string */
     private $recipe;
+    /** @var string */
     private $path;
+    /** @var array */
+    private $options;
 
+    /**
+     * @param string $recipe The name of the recipe to run.
+     * @param string $path|null Optional path to search for the recipe in.
+     */
     public function __construct(string $recipe, string $path = null)
     {
         $this->recipe = $recipe;
         $this->path = $path ?? getcwd();
     }
 
+    /**
+     * Run the recipe.
+     *
+     * @param string ...$argv Arguments passed from CLI.
+     * @return void
+     */
     public function run(string ...$argv) : void
     {
         if (file_exists("{$this->path}/recipes/{$this->recipe}/Recipe.php")) {
             $recipe = require "{$this->path}/recipes/{$this->recipe}/Recipe.php";
             $reflection = new ReflectionFunction($recipe);
+            $wanteds = $reflection->getParameters();
             if ($reflection->getNumberOfRequiredParameters() > count($argv)) {
-                $wanteds = $reflection->getParameters();
                 $usage = call_user_func($tmp = function () use (&$tmp, &$wanteds) : string {
                     $param = array_shift($wanteds);
                     $out = ' ';
                     if ($param->isOptional()) {
                         $out .= '[';
+                    }
+                    if ($param->isVariadic()) {
+                        $out .= '...';
                     }
                     $out .= strtoupper($param->getName());
                     if ($wanteds) {
@@ -47,13 +64,21 @@ class Runner
                     fwrite(STDERR, "$docComment\n\n");
                 }
             } else {
-                call_user_func($recipe, ...$argv)->process();
+                if ($wanteds && end($wanteds)->isVariadic()) {
+                    $this->options = array_splice($argv, count($wanteds) - 1);
+                }
+                $recipe->call($this, ...$argv)->process();
             }
         } else {
             fwrite(STDERR, "Recipe `{$this->recipe}` could not be found in `{$this->path}/recipes`, skipping...\n");
         }
     }
 
+    /**
+     * Helper to returns cleaned passed arguments.
+     *
+     * @return array
+     */
     public static function arguments() : array
     {
         $args = $GLOBALS['argv'];
@@ -67,6 +92,44 @@ class Runner
             }
         }
         return array_values($args);
+    }
+
+    /**
+     * Check if an option (or its negation) was specified as an argument.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function hasOption(string $name) : bool
+    {
+        return in_array($name, $this->options) || in_array("^$name", $this->options);
+    }
+
+    /**
+     * Check if an option (not its negation) was specified as an argument.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function askedFor(string $name) : bool
+    {
+        return in_array($name, $this->options);
+    }
+
+    /**
+     * Set default options. Defaults will only be added if not specified yet
+     * (note: negations will not be overridden!).
+     *
+     * @param string ...$names List of option names.
+     * @return void
+     */
+    public function defaults(string ...$names) : void
+    {
+        array_walk($names, function ($name) {
+            if (!$this->hasOption($name)) {
+                $this->options[] = $name;
+            }
+        });
     }
 }
 
