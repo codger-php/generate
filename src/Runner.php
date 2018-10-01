@@ -29,10 +29,10 @@ class Runner
     /**
      * Run the recipe.
      *
-     * @param string ...$argv Arguments passed from CLI.
+     * @param mixed ...$argv Arguments passed from CLI.
      * @return void
      */
-    public function run(string ...$argv) : void
+    public function run(...$argv) : void
     {
         if (file_exists("{$this->path}/recipes/{$this->recipe}/Recipe.php")) {
             $recipe = require "{$this->path}/recipes/{$this->recipe}/Recipe.php";
