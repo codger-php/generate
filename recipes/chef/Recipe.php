@@ -93,7 +93,7 @@ EOT
                 ]);
             $this->addSousChef($sauce);
         }
-    })->output('/tmp/chef');
+    })->output(sys_get_temp_dir().'/chef');
     return $chef;
 };
 
