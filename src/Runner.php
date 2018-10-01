@@ -82,7 +82,7 @@ class Runner
     }
 
     /**
-     * Helper to returns cleaned passed arguments.
+     * Helper to return cleaned passed arguments.
      *
      * @return array
      */
