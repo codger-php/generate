@@ -65,7 +65,7 @@ class Runner
                 }
             } else {
                 if ($wanteds && end($wanteds)->isVariadic()) {
-                    $this->options = array_splice($argv, count($wanteds) - 1);
+                    $this->setOptions(array_splice($argv, count($wanteds) - 1));
                 }
                 $recipe->call($this, ...$argv)->process();
             }
@@ -130,6 +130,14 @@ class Runner
                 $this->options[] = $name;
             }
         });
+    }
+    
+    /**
+     * Set options programmatically. Mostly used internally.
+     */
+    public function setOptions(array $options) : void
+    {
+        $this->options = $options;
     }
 }
 
