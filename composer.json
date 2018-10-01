@@ -18,7 +18,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Codger\\Generate\\": "./src"
+            "Codger\\Generate\\": "./src",
+            "Codger\\Demo\\": "./demo"
         }
     },
     "require-dev": {
