@@ -37,7 +37,7 @@ class Runner
         if (strpos($this->recipe, '/')) {
             $vendor = substr($this->recipe, 0, strrpos($this->recipe, '/'));
             $recipe = substr($this->recipe, strrpos($this->recipe, '/') + 1);
-            $file = "{$this->path}/vendor/$vendor/recipies/$recipe/Recipe.php";
+            $file = "{$this->path}/vendor/$vendor/recipes/$recipe/Recipe.php";
         } else {
             $file = "{$this->path}/recipes/{$this->recipe}/Recipe.php";
         }
