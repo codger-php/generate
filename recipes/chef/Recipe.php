@@ -63,40 +63,36 @@ EOT
         $chef->setTitle($title);
     }
     if ($this->askedFor('sauce')) {
-        $chef->options('Would sir like sauce with that?', ['y' => 'yes', 'n' => 'no'], function (string $answer) use ($method) : void {
-            if (in_array($answer, ['y', 'yes'])) {
-                $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
-                $ingredients = new class($twig) extends ChefRecipe {
-                    protected $template = 'ingredients.html.twig';
-                };
-                $ingredients->set('ingredients', [
-                    [111, 'g', 'sugar'],
-                    [108, 'ml', 'hot water'],
-                    [108, 'ml', 'heated double cream'],
-                    [101, 'g', 'dark chocolate'],
-                    [72, 'g', 'milk chocolate']
-                ]);
-                $sauce = new ChefRecipe($twig);
-                $sauce->setTitle('Chocolate sauce')
-                    ->set('ingredients', $ingredients->render())
-                    ->set('instructions', [
-                        $method->clean(1)->render(),
-                        $method->put('sugar')->render(),
-                        $method->put('hot water')->render(),
-                        $method->put('heated double cream')->render(),
-                        $method->dissolve('sugar')->render(),
-                        $method->agitate('sugar')->render(),
-                        $method->liquefy('dark chocolate')->render(),
-                        $method->put('dark chocolate')->render(),
-                        $method->liquefy('milk chocolate')->render(),
-                        $method->put('milk chocolate')->render(),
-                        $method->liquefyContents(1)->render(),
-                        $method->pour(1, 2)->render(),
-                        $method->refrigerate(1)->render()
-                    ]);
-                $this->addSousChef($sauce);
-            }
-        });
+        $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
+        $ingredients = new class($twig) extends ChefRecipe {
+            protected $template = 'ingredients.html.twig';
+        };
+        $ingredients->set('ingredients', [
+            [111, 'g', 'sugar'],
+            [108, 'ml', 'hot water'],
+            [108, 'ml', 'heated double cream'],
+            [101, 'g', 'dark chocolate'],
+            [72, 'g', 'milk chocolate']
+        ]);
+        $sauce = new ChefRecipe($twig);
+        $sauce->setTitle('Chocolate sauce')
+            ->set('ingredients', $ingredients->render())
+            ->set('instructions', [
+                $method->clean(1)->render(),
+                $method->put('sugar')->render(),
+                $method->put('hot water')->render(),
+                $method->put('heated double cream')->render(),
+                $method->dissolve('sugar')->render(),
+                $method->agitate('sugar')->render(),
+                $method->liquefy('dark chocolate')->render(),
+                $method->put('dark chocolate')->render(),
+                $method->liquefy('milk chocolate')->render(),
+                $method->put('milk chocolate')->render(),
+                $method->liquefyContents(1)->render(),
+                $method->pour(1, 2)->render(),
+                $method->refrigerate(1)->render()
+            ]);
+        $this->addSousChef($sauce);
     }
     $chef->output(sys_get_temp_dir().'/chef');
     return $chef;
