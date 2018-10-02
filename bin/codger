@@ -14,22 +14,7 @@ Pass at least one argument (the name of the recipe) to `vendor/bin/codger`.
 
 EOT
     );
-    exit(Runner::ERROR_NO_RECIPE);
-}
-
-if (!file_exists("$dir/recipes/{$argv[1]}/Recipe.php")) {
-    fwrite(STDERR, <<<EOT
-
-Recipe `{$argv[1]}` could not be found in `$dir/recipes`.
-
-Make sure that:
-- A folder exists called {$argv[1]};
-- It contains at least a `Recipe.php`.
-
-
-EOT
-    );
-    exit(Runner::ERROR_RECIPE_NOT_FOUND);
+    exit(Bootstrap::ERROR_NO_RECIPE);
 }
 
 $runner = new Bootstrap($argv[1]);
