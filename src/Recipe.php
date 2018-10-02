@@ -197,13 +197,11 @@ abstract class Recipe
      *
      * @param string $info
      * @return Codger\Generate\Recipe Itself for chaining.
+     * @TODO add some formatting (colours?) so it stands out more.
      */
     public function info(string $info) : Recipe
     {
         self::$inout->write("\n$info\n");
-        if (getenv("CODGER_DRY")) {
-            $this->ask("\nPress enter to continue", function() {});
-        }
         return $this;
     }
 }
