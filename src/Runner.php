@@ -35,7 +35,7 @@ class Runner
     public function run(...$argv) : void
     {
         $file = "{$this->path}/recipes/{$this->recipe}/Recipe.php";
-        if (strpos($this->recipe, '/')) {
+        if (count(explode('/', $this->recipe)) >= 3) {
             $vendor = substr($this->recipe, 0, strrpos($this->recipe, '/'));
             $recipe = substr($this->recipe, strrpos($this->recipe, '/') + 1);
             $old = $file;
