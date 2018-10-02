@@ -95,7 +95,10 @@ class Bootstrap
             if ($value === '-w') {
                 putenv("CODGER_DRY=0");
                 unset($args[$key]);
-                break;
+            }
+            if ($value === '-o') {
+                putenv("CODGER_OVERWRITE=1");
+                unset($args[$key]);
             }
         }
         return array_values($args);
