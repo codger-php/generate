@@ -34,12 +34,15 @@ class Runner
      */
     public function run(...$argv) : void
     {
+        $file = "{$this->path}/recipes/{$this->recipe}/Recipe.php";
         if (strpos($this->recipe, '/')) {
             $vendor = substr($this->recipe, 0, strrpos($this->recipe, '/'));
             $recipe = substr($this->recipe, strrpos($this->recipe, '/') + 1);
+            $old = $file;
             $file = "{$this->path}/vendor/$vendor/recipes/$recipe/Recipe.php";
-        } else {
-            $file = "{$this->path}/recipes/{$this->recipe}/Recipe.php";
+            if (!file_exists($file)) {
+                $file = $old;
+            }
         }
         if (file_exists($file)) {
             $recipe = require $file;
