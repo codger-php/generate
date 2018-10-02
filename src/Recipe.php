@@ -188,7 +188,7 @@ abstract class Recipe
      */
     public function delegate(string $recipe, ...$args) : Recipe
     {
-        (new Runner($recipe, $this->path))->run(...$args);
+        (new Bootstrap($recipe, $this->path))->run(...$args);
         $this->delegated = true;
         return $this;
     }
