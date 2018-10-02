@@ -67,10 +67,15 @@ Some recipes will want to make use of other recipes. This way you can "chain"
 recipes together to build more complex recipes. Delegating is done by calling
 the `Codger\Generate\Recipe::delegate` method.
 
-The first argument is the name of the recipe to delegate to. The second argument
-is the optional path to the child recipe (defaults to `cwd` when `null` is
-passed). Note this path should _not_ contain the `recipes` part; the base
-location of the package is sufficient. You can optionally include the
-vendor/package name to make the runner automatically look in `vendor`, e.g.:
-`vendor/bin/codger vendor/package/recipe`.
+The first argument is the name of the recipe to delegate to. You can optionally
+include the vendor/package name if this recipe is located in an external
+package. Separate it from the recipe name using an `@` symbol:
+`vendor/bin/codger vendor/package@recipe`.
+
+Namespaced recipes are first searched for in the `vendor` directory, and if not
+found there additionally in the current working directory (so namespaced recipes
+will work in their local package).
+
+Any additional parameters to `delegate` are passed verbatim as arguments to the
+delegated recipe.
 
