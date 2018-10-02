@@ -18,9 +18,8 @@ class Bootstrap
 
     /**
      * @param string $recipe The name of the recipe to run.
-     * @param string $path|null Optional path to search for the recipe in.
      */
-    public function __construct(string $recipe, string $path = null)
+    public function __construct(string $recipe)
     {
         $this->recipe = $recipe;
         $this->path = $path ?? getcwd();
@@ -77,7 +76,6 @@ class Bootstrap
                 if ($wanteds && end($wanteds)->isVariadic()) {
                     $this->setOptions(array_splice($argv, count($wanteds) - 1));
                 }
-                $recipe->setPath($this->path);
                 $recipe->call($this, ...$argv)->process();
             }
         } else {
