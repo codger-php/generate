@@ -146,8 +146,8 @@ abstract class Recipe
                     if (!file_exists($dir)) {
                         mkdir($dir, 0755, true);
                     }
-                    $overwrite = false;
-                    if (file_exists($filename)) {
+                    $overwrite = (bool)getenv("CODGER_OVERWRITE");
+                    if (file_exists($filename) && !$overwrite) {
                         $this->options("$filename already exists, overwrite or dump to screen?", ['o' => 'Overwrite', 'd' => 'Dump'], function ($answer) use (&$overwrite) {
                             $overwrite = $answer == 'o';
                         });
