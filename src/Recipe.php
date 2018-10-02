@@ -18,6 +18,8 @@ abstract class Recipe
     protected $delegated = false;
     /** @var Codger\Generate\InOut */
     protected static $inout;
+    /** @var string */
+    private $path;
 
     /**
      * Constructor. Recipes must be constructed with a user-supplied
@@ -181,13 +183,12 @@ abstract class Recipe
      * Delegate to a sub-recipe.
      *
      * @param string $recipe The name of the recipe to delegate to.
-     * @param string|null $path Path to sub-recipe. Defaults to `cwd`.
      * @param mixed ...$args Extra arguments.
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function delegate(string $recipe, string $path = null, ...$args) : Recipe
+    public function delegate(string $recipe, ...$args) : Recipe
     {
-        (new Runner($recipe, $path))->run(...$args);
+        (new Runner($recipe, $this->path))->run(...$args);
         $this->delegated = true;
         return $this;
     }
@@ -206,6 +207,17 @@ abstract class Recipe
             $this->ask("\nPress enter to continue", function() {});
         }
         return $this;
+    }
+
+    /**
+     * Set the current path for the recipe. Mostly used internally.
+     *
+     * @param string $path
+     * @return void
+     */
+    public function setPath(string $path) : void
+    {
+        $this->path = $path;
     }
 }
 
