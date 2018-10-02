@@ -32,6 +32,6 @@ EOT
     exit(Runner::ERROR_RECIPE_NOT_FOUND);
 }
 
-$runner = new Runner($argv[1]);
-$runner->run(...Runner::arguments());
+$runner = new Bootstrap($argv[1]);
+$runner->run(...Bootstrap::arguments());
 
