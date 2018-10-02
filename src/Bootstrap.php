@@ -22,7 +22,7 @@ class Bootstrap
     public function __construct(string $recipe)
     {
         $this->recipe = $recipe;
-        $this->path = $path ?? getcwd();
+        $this->path = getcwd();
     }
 
     /**
@@ -34,13 +34,11 @@ class Bootstrap
     public function run(...$argv) : void
     {
         $file = "{$this->path}/recipes/{$this->recipe}/Recipe.php";
-        if (count(explode('/', $this->recipe)) >= 3) {
-            $vendor = substr($this->recipe, 0, strrpos($this->recipe, '/'));
-            $recipe = substr($this->recipe, strrpos($this->recipe, '/') + 1);
-            $old = $file;
+        if (strpos($this->recipe, '@')) {
+            list($vendor, $recipe) = explode('@', $this->recipe);
             $file = "{$this->path}/vendor/$vendor/recipes/$recipe/Recipe.php";
             if (!file_exists($file)) {
-                $file = $old;
+                $file = "{$this->path}/recipes/$recipe/Recipe.php";
             }
         }
         if (file_exists($file)) {
