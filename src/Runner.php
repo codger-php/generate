@@ -77,6 +77,7 @@ class Runner
                 if ($wanteds && end($wanteds)->isVariadic()) {
                     $this->setOptions(array_splice($argv, count($wanteds) - 1));
                 }
+                $recipe->setPath($this->path);
                 $recipe->call($this, ...$argv)->process();
             }
         } else {
