@@ -18,8 +18,6 @@ abstract class Recipe
     protected $delegated = false;
     /** @var Codger\Generate\InOut */
     protected static $inout;
-    /** @var string */
-    private $path;
 
     /**
      * Constructor. Recipes must be constructed with a user-supplied
@@ -188,7 +186,7 @@ abstract class Recipe
      */
     public function delegate(string $recipe, ...$args) : Recipe
     {
-        (new Bootstrap($recipe, $this->path))->run(...$args);
+        (new Bootstrap($recipe))->run(...$args);
         $this->delegated = true;
         return $this;
     }
@@ -207,17 +205,6 @@ abstract class Recipe
             $this->ask("\nPress enter to continue", function() {});
         }
         return $this;
-    }
-
-    /**
-     * Set the current path for the recipe. Mostly used internally.
-     *
-     * @param string $path
-     * @return void
-     */
-    public function setPath(string $path) : void
-    {
-        $this->path = $path;
     }
 }
 
