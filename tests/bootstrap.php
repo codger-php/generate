@@ -5,9 +5,9 @@ use Gentry\Gentry\Wrapper;
 $inout = Wrapper::createObject(Codger\Generate\FakeInOut::class);
 Codger\Generate\Recipe::setInOut($inout);
 
-/** Testsuite for Codger\Generate\Runner */
+/** Testsuite for Codger\Generate\Bootstrap */
 return function () : Generator {
-    $runner = Wrapper::createObject(Codger\Generate\Runner::class, 'chef');
+    $runner = Wrapper::createObject(Codger\Generate\Bootstrap::class, 'chef');
 
     /** Arguments method strips the -w flag */
     yield function () use ($runner) {
