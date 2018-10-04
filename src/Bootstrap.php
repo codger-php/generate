@@ -99,6 +99,7 @@ class Bootstrap
             }
             if ($value === '-o') {
                 putenv("CODGER_OVERWRITE=1");
+                putenv("CODGER_DRY=0");
                 unset($args[$key]);
             }
         }
