@@ -72,7 +72,8 @@ class Bootstrap
                 }
             } else {
                 if ($wanteds && end($wanteds)->isVariadic()) {
-                    $this->setOptions(array_splice($argv, count($wanteds) - 1));
+                    $copy = $argv;
+                    $this->setOptions(array_splice($copy, count($wanteds) - 1));
                 }
                 $recipe->call($this, ...$argv)->process();
             }
