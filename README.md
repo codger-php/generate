@@ -28,8 +28,17 @@ $ composer require --dev codger/generate
 $ vendor/bin/codger name-of-recipe some additional arguments
 ```
 
-To actually write files (Codger defaults to outputting to `STDOUT`) pass the
-`-w` flag ("write") as any argument.
+## Flags
+Apart from additional arguments, Codger supports four flags. These can be placed
+anywhere in the command argument list (though putting them last makes most sense
+generally) but _after_ the `name-of-recipe`:
+
+- `-w` to actually write files (Codger defaults to outputting to `STDOUT`);
+- `-o` to _over_write files. Note that this implicitly sets `-w` too;
+- `-d` to _dump_ files. This dumps the generated contents to `STDOUT` _but only
+  if the file already exists_; otherwise, the file will be written as if `-w`;
+  was set;
+- `-s` to skip files that exist. This too implies `-w`.
 
 ## Writing recipes
 Recipes are expected to be stored in a `recipes` folder in the root of your
