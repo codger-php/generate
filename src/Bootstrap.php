@@ -112,6 +112,18 @@ class Bootstrap
                 putenv("CODGER_DRY=0");
                 unset($args[$key]);
             }
+            if ($value === '-d') {
+                putenv("CODGER_OVERWRITE=0");
+                putenv("CODGER_DUMP=1");
+                putenv("CODGER_DRY=0");
+                unset($args[$key]);
+            }
+            if ($value === '-s') {
+                putenv("CODGER_OVERWRITE=0");
+                putenv("CODGER_SKIP=1");
+                putenv("CODGER_DRY=0");
+                unset($args[$key]);
+            }
         }
         return array_values($args);
     }
