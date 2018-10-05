@@ -37,7 +37,7 @@ return function () : Generator {
         assert($result === false);
     };
 
-    /** defaults yields $result === null */
+    /** an option with a default appears set, even if not specified explicitly */
     yield function () use ($runner) {
         $runner->setOptions([]);
         $runner->defaults('blarps');
