@@ -3,6 +3,7 @@
 namespace Codger\Generate;
 
 use ReflectionFunction;
+use stdClass;
 
 class Bootstrap
 {
@@ -15,14 +16,17 @@ class Bootstrap
     private $path;
     /** @var array */
     private $options = [];
+    /** @var stdClass */
+    private $config;
 
     /**
      * @param string $recipe The name of the recipe to run.
      */
-    public function __construct(string $recipe)
+    public function __construct(string $recipe, stdClass $config = null)
     {
         $this->recipe = $recipe;
         $this->path = getcwd();
+        $this->config = $config ?? new stdClass;
     }
 
     /**
@@ -34,13 +38,10 @@ class Bootstrap
     public function run(...$argv) : void
     {
         $recipe = $this->recipe;
-        if (file_exists(getcwd().'/Codger.json')) {
-            $config = json_decode(getcwd().'/Codger.json');
-            if (isset($config->aliases, $config->aliases->$recipe)) {
-                $alias = $config->aliases->$recipe;
-                $recipe = $alias[0];
-                $argv = array_splice($alias, 0, 1);
-            }
+        if (isset($this->config->aliases, $this->config->aliases->$recipe)) {
+            $alias = $this->config->aliases->$recipe;
+            $recipe = $alias[0];
+            $argv = array_splice($alias, 0, 1);
         }
         $file = "{$this->path}/recipes/$recipe/Recipe.php";
         if (strpos($recipe, '@')) {
