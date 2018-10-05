@@ -204,5 +204,19 @@ abstract class Recipe
         self::$inout->write("\n$info\n");
         return $this;
     }
+
+    /**
+     * Display an error to the user. The error is automatically wrapped by
+     * newlines.
+     *
+     * @param string $error
+     * @return Codger\Generate\Recipe Itself for chaining.
+     * @TODO add some formatting (colours?) so it stands out more.
+     */
+    public function error(string $error) : Recipe
+    {
+        self::$inout->write("\n$error\n");
+        return $this;
+    }
 }
 
