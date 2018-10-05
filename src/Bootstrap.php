@@ -33,9 +33,18 @@ class Bootstrap
      */
     public function run(...$argv) : void
     {
-        $file = "{$this->path}/recipes/{$this->recipe}/Recipe.php";
-        if (strpos($this->recipe, '@')) {
-            list($vendor, $recipe) = explode('@', $this->recipe);
+        $recipe = $this->recipe;
+        if (file_exists(getcwd().'/Codger.json')) {
+            $config = json_decode(getcwd().'/Codger.json');
+            if (isset($config->aliases, $config->aliases->$recipe)) {
+                $alias = $config->aliases->$recipe;
+                $recipe = $alias[0];
+                $argv = array_splice($alias, 0, 1);
+            }
+        }
+        $file = "{$this->path}/recipes/$recipe/Recipe.php";
+        if (strpos($recipe, '@')) {
+            list($vendor, $recipe) = explode('@', $recipe);
             $file = "{$this->path}/vendor/$vendor/recipes/$recipe/Recipe.php";
             if (!file_exists($file)) {
                 $file = "{$this->path}/recipes/$recipe/Recipe.php";
@@ -64,7 +73,7 @@ class Bootstrap
                     }
                     return $out;
                 }, $wanteds);
-                fwrite(STDERR, "\nUsage: `$ vendor/bin/codger {$this->recipe}$usage`\n\n");
+                fwrite(STDERR, "\nUsage: `$ vendor/bin/codger $recipe$usage`\n\n");
                 if ($docComment = $reflection->getDocComment()) {
                     $docComment = preg_replace("@(^/\*\*\n|\n\s?\*/$)@", '', $docComment);
                     $docComment = preg_replace("@^\s?\*\s?@m", '', $docComment);
@@ -78,7 +87,7 @@ class Bootstrap
                 $recipe->call($this, ...$argv)->process();
             }
         } else {
-            fwrite(STDERR, "Recipe `{$this->recipe}` could not be found in `{$this->path}/recipes`, skipping...\n");
+            fwrite(STDERR, "Recipe `$recipe` could not be found in `{$this->path}/recipes`, skipping...\n");
         }
     }
 
