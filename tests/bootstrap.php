@@ -47,9 +47,10 @@ return function () use ($inout) : Generator {
 
     /** we can set aliases */
     yield function () use ($inout) {
-        $runner = Wrapper::createObject(Codger\Generate\Bootstrap::class, 'chefspecial', (object)[
-            'aliases' => ['chefspecial' => ['chef', 'Chocolate mousse']]
-        ]);
+        $config = new stdClass;
+        $config->aliases = new stdClass;
+        $config->aliases->chefspecial = ['chef', 'Chocolate mousse'];
+        $runner = Wrapper::createObject(Codger\Generate\Bootstrap::class, 'chefspecial', $config);
         $runner->run();
         assert(strpos($inout->flush(), 'Chocolate mousse') !== false);
     };
