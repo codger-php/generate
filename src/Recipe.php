@@ -147,14 +147,20 @@ abstract class Recipe
                         mkdir($dir, 0755, true);
                     }
                     $overwrite = (bool)getenv("CODGER_OVERWRITE");
-                    if (file_exists($filename) && !$overwrite) {
-                        $this->options("$filename already exists, overwrite or dump to screen?", ['o' => 'Overwrite', 'd' => 'Dump'], function ($answer) use (&$overwrite) {
-                            $overwrite = $answer == 'o';
-                        });
+                    $dump = (bool)getenv("CODGER_DUMP");
+                    $skip = (bool)getenv("CODGER_SKIP");
+                    if (file_exists($filename) && !($overwrite || $dump || $skip)) {
+                        $this->options(
+                            "$filename already exists, overwrite or dump to screen?",
+                            ['o' => 'Overwrite', 'd' => 'Dump', 's' => 'Skip'],
+                            function ($answer) use (&$overwrite) {
+                                $overwrite = $answer == 'o';
+                            }
+                        );
                     }
                     if (!file_exists($filename) || $overwrite) {
                         file_put_contents($filename, $output);
-                    } else {
+                    } elseif ($dump) {
                         self::$inout->write("\n$filename:\n$output\n");
                     }
                 }
