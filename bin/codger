@@ -17,6 +17,7 @@ EOT
     exit(Bootstrap::ERROR_NO_RECIPE);
 }
 
-$runner = new Bootstrap($argv[1]);
+$config = file_exists("$dir/Codger.json") ? json_decode(file_get_contents("$dir/Codger.json")) : null;
+$runner = new Bootstrap($argv[1], $config);
 $runner->run(...Bootstrap::arguments());
 
