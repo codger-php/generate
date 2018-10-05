@@ -41,7 +41,7 @@ class Bootstrap
         if (isset($this->config->aliases, $this->config->aliases->$recipe)) {
             $alias = $this->config->aliases->$recipe;
             $recipe = $alias[0];
-            $argv = array_splice($alias, 0, 1);
+            $argv = array_splice($alias, 1);
         }
         $file = "{$this->path}/recipes/$recipe/Recipe.php";
         if (strpos($recipe, '@')) {
