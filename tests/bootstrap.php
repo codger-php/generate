@@ -6,7 +6,7 @@ $inout = Wrapper::createObject(Codger\Generate\FakeInOut::class);
 Codger\Generate\Recipe::setInOut($inout);
 
 /** Testsuite for Codger\Generate\Bootstrap */
-return function () : Generator {
+return function () use ($inout) : Generator {
     $runner = Wrapper::createObject(Codger\Generate\Bootstrap::class, 'chef');
 
     /** Arguments method strips the -w flag */
@@ -43,6 +43,15 @@ return function () : Generator {
         $runner->defaults('blarps');
         $result = $runner->hasOption('blarps');
         assert($result === true);
+    };
+
+    /** we can set aliases */
+    yield function () use ($inout) {
+        $runner = Wrapper::createObject(Codger\Generate\Bootstrap::class, 'chefspecial', (object)[
+            'aliases' => ['chefspecial' => ['chef', 'Chocolate mousse']]
+        ]);
+        $runner->run();
+        assert(strpos($inout->flush(), 'Chocolate mousse') !== false);
     };
 };
 
