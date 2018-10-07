@@ -19,5 +19,6 @@ EOT
 
 $config = file_exists("$dir/Codger.json") ? json_decode(file_get_contents("$dir/Codger.json")) : null;
 $runner = new Bootstrap($argv[1], $config);
-$runner->run(...Bootstrap::arguments());
+array_splice($argv, 2);
+$runner->run(...Bootstrap::arguments($argv));
 
