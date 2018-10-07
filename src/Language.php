@@ -6,9 +6,10 @@ abstract class Language
 {
     const TYPE_NAMESPACE = 1;
     const TYPE_TABLE = 2;
-    const TYPE_VARIABLE = 4;
-    const TYPE_PATH = 8;
-    const TYPE_URL = 16;
+    const TYPE_VARIABLE = 3;
+    const TYPE_PATH = 4;
+    const TYPE_URL = 5;
+    const TYPE_CSS_IDENTIFIER = 6;
 
     /**
      * Returns a pluralized version of the specified `$string`.
@@ -66,6 +67,8 @@ abstract class Language
                 return implode('/', $parts);
             case self::TYPE_URL:
                 return strtolower(implode('/', $parts));
+            case self::TYPE_CSS_IDENTIFIER:
+                return strtolower(implode('-', $parts));
             default:
                 throw new DomainException("Please use one of the `TYPE_` constants on the `Codger\Php\Language` class as 2nd parameter.");
         }
