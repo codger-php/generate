@@ -95,12 +95,11 @@ class Bootstrap
     /**
      * Helper to return cleaned passed arguments.
      *
+     * @param array $args
      * @return array
      */
-    public static function arguments() : array
+    public static function arguments(array $args) : array
     {
-        $args = $GLOBALS['argv'];
-        unset($args[0], $args[1]);
         putenv("CODGER_DRY=1");
         foreach ($args as $key => $value) {
             if ($value === '-w') {
