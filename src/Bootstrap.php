@@ -15,7 +15,7 @@ class Bootstrap
     /** @var string */
     private $path;
     /** @var array */
-    private $options = [];
+    private static $options = [];
     /** @var stdClass */
     private $config;
 
@@ -81,7 +81,7 @@ class Bootstrap
                     fwrite(STDERR, "$docComment\n\n");
                 }
             } else {
-                if ($wanteds && end($wanteds)->isVariadic()) {
+                if ($wanteds && end($wanteds)->isVariadic() && end($wanteds)->name == 'options') {
                     $copy = $argv;
                     $this->setOptions(array_splice($copy, count($wanteds) - 1));
                 }
@@ -135,7 +135,7 @@ class Bootstrap
      */
     public function hasOption(string $name) : bool
     {
-        return in_array($name, $this->options) || in_array("^$name", $this->options);
+        return in_array($name, self::$options) || in_array("^$name", self::$options);
     }
 
     /**
@@ -146,7 +146,7 @@ class Bootstrap
      */
     public function askedFor(string $name) : bool
     {
-        return in_array($name, $this->options);
+        return in_array($name, self::$options);
     }
 
     /**
@@ -160,7 +160,7 @@ class Bootstrap
     {
         array_walk($names, function ($name) {
             if (!$this->hasOption($name)) {
-                $this->options[] = $name;
+                self::$options[] = $name;
             }
         });
     }
@@ -170,7 +170,7 @@ class Bootstrap
      */
     public function setOptions(array $options) : void
     {
-        $this->options = $options;
+        self::$options = array_unique(array_merge(self::$options, $options));
     }
 }
 
