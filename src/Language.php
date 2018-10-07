@@ -70,7 +70,7 @@ abstract class Language
             case self::TYPE_CSS_IDENTIFIER:
                 return strtolower(implode('-', $parts));
             default:
-                throw new DomainException("Please use one of the `TYPE_` constants on the `Codger\Php\Language` class as 2nd parameter.");
+                throw new DomainException("Please use one of the `TYPE_` constants on the `Codger\Generate\Language` class as 2nd parameter.");
         }
     }
 
