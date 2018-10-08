@@ -52,8 +52,8 @@ class Bootstrap
             }
         }
         if (file_exists($file)) {
-            $recipe = require $file;
-            $reflection = new ReflectionFunction($recipe);
+            $recipefn = require $file;
+            $reflection = new ReflectionFunction($recipefn);
             $wanteds = $reflection->getParameters();
             if ($reflection->getNumberOfRequiredParameters() > count($argv)) {
                 $usage = call_user_func($tmp = function () use (&$tmp, &$wanteds) : string {
@@ -85,7 +85,7 @@ class Bootstrap
                     $copy = $argv;
                     $this->setOptions(array_splice($copy, count($wanteds) - 1));
                 }
-                $recipe->call($this, ...$argv)->process();
+                $recipefn->call($this, ...$argv)->process();
             }
         } else {
             fwrite(STDERR, "Recipe `$recipe` could not be found in `{$this->path}/recipes`, skipping...\n");
