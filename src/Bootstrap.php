@@ -167,10 +167,23 @@ class Bootstrap
     
     /**
      * Set options programmatically. Mostly used internally.
+     *
+     * @param array $options
+     * @return void
      */
     public function setOptions(array $options) : void
     {
         self::$options = array_unique(array_merge(self::$options, $options));
+    }
+
+    /**
+     * Reset options.
+     *
+     * @return void
+     */
+    public function resetOptions() : void
+    {
+        self::$options = [];
     }
 }
 
