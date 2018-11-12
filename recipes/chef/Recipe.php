@@ -6,7 +6,7 @@ use Codger\Demo\ChefMethod;
 
 return function (string $title = null, ...$options) : ChefRecipe {
     $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
-    $chef = new ChefRecipe($twig, ...Bootstrap::arguments());
+    $chef = new ChefRecipe($twig, ...Bootstrap::arguments([]));
     $ingredients = new class($twig) extends ChefRecipe {
         protected $template = 'ingredients.html.twig';
     };
