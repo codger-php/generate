@@ -177,6 +177,16 @@ class Bootstrap
     }
 
     /**
+     * Get currently defined options.
+     *
+     * @return array
+     */
+    public function getOptions() : array
+    {
+        return self::$options;
+    }
+
+    /**
      * Reset options.
      *
      * @return void
