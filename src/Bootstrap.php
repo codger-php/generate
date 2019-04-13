@@ -7,7 +7,9 @@ use stdClass;
 
 class Bootstrap
 {
+    /** @var int */
     const ERROR_NO_RECIPE = 1;
+    /** @var int */
     const ERROR_RECIPE_NOT_FOUND = 2;
 
     /** @var string */
@@ -21,6 +23,8 @@ class Bootstrap
 
     /**
      * @param string $recipe The name of the recipe to run.
+     * @param stdClass $config Optional config.
+     * @return void
      */
     public function __construct(string $recipe, stdClass $config = null)
     {
