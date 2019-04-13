@@ -10,6 +10,9 @@ abstract class Language
     const TYPE_PATH = 4;
     const TYPE_URL = 5;
     const TYPE_CSS_IDENTIFIER = 6;
+    const TYPE_ANGULAR_MODULE = 7;
+    const TYPE_ANGULAR_COMPONENT = 8;
+    const TYPE_ANGULAR_TAG = 9;
 
     /**
      * Returns a pluralized version of the specified `$string`.
@@ -62,13 +65,17 @@ abstract class Language
             case self::TYPE_TABLE:
                 return strtolower(implode('_', $parts));
             case self::TYPE_VARIABLE:
+            case self::TYPE_ANGULAR_COMPONENT:
                 return lcfirst(implode('', $parts));
             case self::TYPE_PATH:
                 return implode('/', $parts);
             case self::TYPE_URL:
                 return strtolower(implode('/', $parts));
             case self::TYPE_CSS_IDENTIFIER:
+            case self::TYPE_ANGULAR_TAG:
                 return strtolower(implode('-', $parts));
+            case self::TYPE_ANGULAR_MODULE:
+                return strtolower(implode('.', $parts));
             default:
                 throw new DomainException("Please use one of the `TYPE_` constants on the `Codger\Generate\Language` class as 2nd parameter.");
         }
@@ -82,7 +89,7 @@ abstract class Language
      */
     private static function normalize(string $string) : string
     {
-        return strtolower(str_replace(['\\', '/', '_'], ' ', $string));
+        return strtolower(str_replace(['\\', '/', '_', '.'], ' ', $string));
     }
 }
 

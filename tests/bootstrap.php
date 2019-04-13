@@ -12,7 +12,7 @@ return function () use ($inout) : Generator {
     /** Arguments method strips the -w flag */
     yield function () use ($runner) {
         $GLOBALS['argv'] = ['', '', '-w'];
-        $result = $runner->arguments();
+        $result = $runner->arguments([]);
         assert($result === []);
         putenv("CODGER_DRY=1");
         $GLOBALS['argv'] = ['', ''];
