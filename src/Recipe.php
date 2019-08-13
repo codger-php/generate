@@ -107,9 +107,7 @@ abstract class Recipe
      */
     public function options(string $question, array $options, callable $callback) : Recipe
     {
-        if ($question) {
-            self::$inout->write("$question\n\n");
-        }
+        self::$inout->write("$question\n\n");
         foreach ($options as $index => $option) {
             self::$inout->write("[$index]: $option\n");
         }
