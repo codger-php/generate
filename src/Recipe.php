@@ -31,7 +31,7 @@ abstract class Recipe
     {
         $this->variables = new StdClass;
         $this->twig = $twig;
-        self:initInOut();
+        self::initInOut();
     }
 
     /**
