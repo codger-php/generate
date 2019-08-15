@@ -65,7 +65,7 @@ abstract class Language
         switch ($to) {
             case self::TYPE_NAMESPACE:
                 self::initInOut();
-                self::$inout->warning("`Codger\Generate\Language::TYPE_NAMESPACE` is deprecated.
+                self::$inout->error("`Codger\Generate\Language::TYPE_NAMESPACE` is deprecated.
 Use `Codger\Generate\Language::TYPE_PHP_NAMESPACE` instead.");
             case self::TYPE_PHP_NAMESPACE:
                 return implode('\\', $parts);
