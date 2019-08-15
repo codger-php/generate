@@ -10,14 +10,14 @@ use StdClass;
  */
 abstract class Recipe
 {
+    use InOutTrait;
+
     /** @var Twig_Environment */
     protected $twig;
     /** @var StdClass */
     protected $variables;
     /** @var bool */
     protected $delegated = false;
-    /** @var Codger\Generate\InOut */
-    protected static $inout;
 
     /**
      * Constructor. Recipes must be constructed with a user-supplied
@@ -31,20 +31,7 @@ abstract class Recipe
     {
         $this->variables = new StdClass;
         $this->twig = $twig;
-        if (!isset(self::$inout)) {
-            self::$inout = new StandardInOut;
-        }
-    }
-
-    /**
-     * Set the input/output streams. This is useful for e.g. testing, but also
-     * in other scenarios where you need to reroute input/output.
-     *
-     * @param Codger\Generate\InOut $inout
-     */
-    public static function setInOut(InOut $inout) : void
-    {
-        self::$inout = $inout;
+        self:initInOut();
     }
 
     /**
@@ -220,7 +207,7 @@ abstract class Recipe
      */
     public function error(string $error) : Recipe
     {
-        self::$inout->write("\n$error\n");
+        self::$inout->error("\n$error\n");
         return $this;
     }
 }
