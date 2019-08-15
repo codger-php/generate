@@ -4,6 +4,9 @@ namespace Codger\Generate;
 
 abstract class Language
 {
+    use InOutTrait;
+
+    const TYPE_PHP_NAMESPACE = 1;
     const TYPE_NAMESPACE = 1;
     const TYPE_TABLE = 2;
     const TYPE_VARIABLE = 3;
@@ -61,6 +64,10 @@ abstract class Language
         });
         switch ($to) {
             case self::TYPE_NAMESPACE:
+                self::initInOut();
+                self::$inout->warning("`Codger\Generate\Language::TYPE_NAMESPACE` is deprecated.
+Use `Codger\Generate\Language::TYPE_PHP_NAMESPACE` instead.");
+            case self::TYPE_PHP_NAMESPACE:
                 return implode('\\', $parts);
             case self::TYPE_TABLE:
                 return strtolower(implode('_', $parts));
