@@ -7,7 +7,7 @@ abstract class Language
     use InOutTrait;
 
     const TYPE_PHP_NAMESPACE = 1;
-    const TYPE_NAMESPACE = 1;
+    const TYPE_NAMESPACE = 99;
     const TYPE_TABLE = 2;
     const TYPE_VARIABLE = 3;
     const TYPE_PATH = 4;
