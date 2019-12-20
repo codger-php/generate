@@ -1,13 +1,11 @@
 <?php
 
-use Gentry\Gentry\Wrapper;
-
-$inout = Wrapper::createObject(Codger\Generate\FakeInOut::class);
+$inout = new Codger\Generate\FakeInOut;
 Codger\Generate\Recipe::setInOut($inout);
 
-/** Testsuite for Codger\Generate\Bootstrap */
+/** Testsuite for Codger\Generate\Command */
 return function () use ($inout) : Generator {
-    $runner = Wrapper::createObject(Codger\Generate\Bootstrap::class, 'chef');
+    $runner = new Codger\Generate\Command('chef');
 
     /** Arguments method strips the -w flag */
     yield function () use ($runner) {
@@ -47,7 +45,7 @@ return function () use ($inout) : Generator {
 
     /** we can set aliases */
     yield function () use ($inout) {
-        $runner = Wrapper::createObject(Codger\Generate\Bootstrap::class, 'chefspecial', (object)[
+        $runner = new Codger\Generate\Command('chefspecial', (object)[
             'aliases' => (object)['chefspecial' => ['chef', 'Chocolate mousse']]
         ]);
         $runner->run();
