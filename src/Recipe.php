@@ -4,11 +4,12 @@ namespace Codger\Generate;
 
 use Twig_Environment;
 use StdClass;
+use Monolyth\Cliff\Command;
 
 /**
  * Base Recipe class all other recipes should extend.
  */
-abstract class Recipe
+abstract class Recipe extends Command
 {
     use InOutTrait;
 
@@ -27,7 +28,7 @@ abstract class Recipe
      * @param Twig_Environment $twig
      * @return void
      */
-    public function __construct(Twig_Environment $twig)
+    protected function initialize(Twig_Environment $twig)
     {
         $this->variables = new StdClass;
         $this->twig = $twig;
@@ -178,7 +179,11 @@ abstract class Recipe
      */
     public function delegate(string $recipe, ...$args) : Recipe
     {
-        (new Bootstrap($recipe))->run(...$args);
+        $recipeClass = self::toClassName($recipe);
+        $recipe = new $recipeClass($args);
+        $arguments = $recipe->getOperands();
+        array_shift($arguments); // script name
+        $recipe(...$arguments);
         $this->delegated = true;
         return $this;
     }
@@ -209,6 +214,11 @@ abstract class Recipe
     {
         self::$inout->error("\n$error\n");
         return $this;
+    }
+
+    public static function toClassName(string $recipe) : string
+    {
+        return 'Codger\\'.preg_replace('@\\\\Command$@', '\Recipe', self::toPhpName($recipe));
     }
 }
 
