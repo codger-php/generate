@@ -27,6 +27,7 @@ abstract class Recipe extends Command
      */
     public function __construct(array $arguments = null, bool $strict = true)
     {
+        parent::__construct($arguments, $strict);
         $this->_variables = new StdClass;
         self::initInOut();
     }
