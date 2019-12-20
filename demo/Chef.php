@@ -8,6 +8,10 @@ use Twig_Loader_Filesystem;
 
 class Chef extends Recipe
 {
+    /** @var bool */
+    public $sauce = false;
+
+    /** @var string */
     protected $_template = 'main.html.twig';
 
     public function __invoke(string $title = null)
@@ -72,7 +76,7 @@ EOT
                 }
             });
         }
-        if ($this->askedFor('sauce')) {
+        if ($this->sauce) {
             $ingredients = new class() extends Chef {
                 protected $_template = 'ingredients.html.twig';
             };
