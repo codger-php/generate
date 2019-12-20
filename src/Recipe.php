@@ -14,24 +14,24 @@ abstract class Recipe extends Command
     use InOutTrait;
 
     /** @var Twig_Environment */
-    protected $twig;
+    protected $_twig;
     /** @var StdClass */
-    protected $variables;
+    protected $_variables;
     /** @var bool */
-    protected $delegated = false;
+    protected $_delegated = false;
 
     /**
      * Constructor. Recipes must be constructed with a user-supplied
      * Twig_Environment, since we can't guess how users would like to configure
      * it (cache dir, loader, debug etc).
      *
-     * @param Twig_Environment $twig
+     * @param Twig_Environment $_twig
      * @return void
      */
-    protected function initialize(Twig_Environment $twig)
+    protected function initialize(Twig_Environment $_twig)
     {
-        $this->variables = new StdClass;
-        $this->twig = $twig;
+        $this->_variables = new StdClass;
+        $this->_twig = $_twig;
         self::initInOut();
     }
 
@@ -44,7 +44,7 @@ abstract class Recipe extends Command
      */
     public function set(string $name, $value) : Recipe
     {
-        $this->variables->$name = $value;
+        $this->_variables->$name = $value;
         return $this;
     }
 
@@ -54,7 +54,7 @@ abstract class Recipe extends Command
      */
     public function get(string $name)
     {
-        return $this->variables->$name ?? null;
+        return $this->_variables->$name ?? null;
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class Recipe extends Command
      */
     public function render() : string
     {
-        return $this->twig->render($this->template, (array)$this->variables);
+        return $this->_twig->render($this->template, (array)$this->_variables);
     }
 
     /**
@@ -165,7 +165,7 @@ abstract class Recipe extends Command
     {
         if (isset($this->output)) {
             $this->output->call($this);
-        } elseif (!$this->delegated) {
+        } elseif (!$this->_delegated) {
             self::$inout->error("Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
         }
     }
@@ -184,7 +184,7 @@ abstract class Recipe extends Command
         $arguments = $recipe->getOperands();
         array_shift($arguments); // script name
         $recipe(...$arguments);
-        $this->delegated = true;
+        $this->_delegated = true;
         return $this;
     }
 
