@@ -68,7 +68,9 @@ abstract class Language
                 self::$inout->error("`Codger\Generate\Language::TYPE_NAMESPACE` is deprecated.
 Use `Codger\Generate\Language::TYPE_PHP_NAMESPACE` instead.");
             case self::TYPE_PHP_NAMESPACE:
-                return implode('\\', $parts);
+                return preg_replace_callback('@-([a-z])@', function ($match) {
+                    return strtoupper($match[1]);
+                }, implode('\\', $parts));
             case self::TYPE_TABLE:
                 return strtolower(implode('_', $parts));
             case self::TYPE_VARIABLE:
