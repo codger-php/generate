@@ -4,6 +4,7 @@ namespace Codger\Demo;
 
 use Codger\Generate\Recipe;
 use Twig_Environment;
+use Twig_Loader_Filesystem;
 
 class Chef extends Recipe
 {
@@ -35,7 +36,7 @@ class Chef extends Recipe
         
         $method = new Method;
         $method->initialize($twig);
-        $chef->set('comment', <<<EOT
+        $this->set('comment', <<<EOT
 This prints hello world, while being tastier than Hello World Souffle. The main
 chef makes a " world!" cake, which he puts in the baking dish. When he gets the
 sous chef to make the "Hello" chocolate sauce, it gets put into the baking dish
@@ -104,7 +105,7 @@ EOT
                 ]);
             $this->addSousChef($sauce);
         }
-        $chef->output(sys_get_temp_dir().'/chef');
+        $this->output(sys_get_temp_dir().'/chef');
     }
 
     protected function setTitle(string $title) : ChefRecipe
