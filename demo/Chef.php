@@ -17,11 +17,11 @@ class Chef extends Recipe
         }
         $this->_variables->souschefs = [];
         $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
-        $this->initialize($twig);
+        $this->setTwigEnvironment($twig);
         $ingredients = new class() extends Chef {
             protected $_template = 'ingredients.html.twig';
         };
-        $ingredients->initialize($twig);
+        $ingredients->setTwigEnvironment($twig);
         $ingredients->set('ingredients', [
             [33, 'g', 'chocolate chips'],
             [100, 'g', 'butter'],
@@ -35,7 +35,7 @@ class Chef extends Recipe
         ]);
         
         $method = new Method;
-        $method->initialize($twig);
+        $method->setTwigEnvironment($twig);
         $this->set('comment', <<<EOT
 This prints hello world, while being tastier than Hello World Souffle. The main
 chef makes a " world!" cake, which he puts in the baking dish. When he gets the
@@ -76,7 +76,7 @@ EOT
             $ingredients = new class() extends Chef {
                 protected $_template = 'ingredients.html.twig';
             };
-            $ingredients->initialize($twig);
+            $ingredients->setTwigEnvironment($twig);
             $ingredients->set('ingredients', [
                 [111, 'g', 'sugar'],
                 [108, 'ml', 'hot water'],
@@ -85,7 +85,7 @@ EOT
                 [72, 'g', 'milk chocolate']
             ]);
             $sauce = new Chef;
-            $sauce->initialize($twig);
+            $sauce->setTwigEnvironment($twig);
             $sauce->setTitle('Chocolate sauce')
                 ->set('ingredients', $ingredients->render())
                 ->set('instructions', [
