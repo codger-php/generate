@@ -21,18 +21,25 @@ abstract class Recipe extends Command
     protected $_delegated = false;
 
     /**
-     * Constructor. Recipes must be constructed with a user-supplied
-     * Twig_Environment, since we can't guess how users would like to configure
-     * it (cache dir, loader, debug etc).
+     * Constructor.
+     *
+     * @return void
+     */
+    public function __construct(array $arguments = null, bool $strict = true)
+    {
+        $this->_variables = new StdClass;
+        self::initInOut();
+    }
+
+    /**
+     * Set the Twig environment to be used.
      *
      * @param Twig_Environment $_twig
      * @return void
      */
-    protected function initialize(Twig_Environment $_twig)
+    protected function setTwigEnvironment(Twig_Environment $_twig)
     {
-        $this->_variables = new StdClass;
         $this->_twig = $_twig;
-        self::initInOut();
     }
 
     /**
