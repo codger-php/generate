@@ -15,7 +15,7 @@ class Chef extends Recipe
         if (isset($title)) {
             $this->setTitle($title);
         }
-        $this->variables->souschefs = [];
+        $this->_variables->souschefs = [];
         $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
         $this->initialize($twig);
         $ingredients = new class() extends Chef {
@@ -108,14 +108,14 @@ EOT
         $this->output(sys_get_temp_dir().'/chef');
     }
 
-    protected function setTitle(string $title) : ChefRecipe
+    protected function setTitle(string $title) : Chef
     {
         return $this->set('title', $title);
     }
 
     protected function addSousChef(Chef $recipe) : Chef
     {
-        $this->variables->souschefs[] = $recipe->render();
+        $this->_variables->souschefs[] = $recipe->render();
         return $this;
     }
 }
