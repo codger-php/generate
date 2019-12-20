@@ -8,7 +8,7 @@ use Twig_Loader_Filesystem;
 
 class Chef extends Recipe
 {
-    protected $template = 'main.html.twig';
+    protected $_template = 'main.html.twig';
 
     public function __invoke(string $title = null)
     {
@@ -19,7 +19,7 @@ class Chef extends Recipe
         $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
         $this->initialize($twig);
         $ingredients = new class() extends Chef {
-            protected $template = 'ingredients.html.twig';
+            protected $_template = 'ingredients.html.twig';
         };
         $ingredients->initialize($twig);
         $ingredients->set('ingredients', [
@@ -74,7 +74,7 @@ EOT
         }
         if ($this->askedFor('sauce')) {
             $ingredients = new class() extends Chef {
-                protected $template = 'ingredients.html.twig';
+                protected $_template = 'ingredients.html.twig';
             };
             $ingredients->initialize($twig);
             $ingredients->set('ingredients', [
