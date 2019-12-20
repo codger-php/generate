@@ -4,120 +4,124 @@ namespace Codger\Demo;
 
 use Codger\Generate\Recipe;
 
-class ChefMethod extends Recipe
+class Method extends Recipe
 {
+    public function __invoke() : void
+    {
+    }
+
     public function take(string $what) : ChefMethod
     {
-        $this->template = 'methods/take.html.twig';
-        $this->variables->ingredient = $what;
+        $this->_template = 'methods/take.html.twig';
+        $this->_variables->ingredient = $what;
         return $this;
     }
 
     public function put(string $what, int $bowl = 1) : ChefMethod
     {
-        $this->template = 'methods/put.html.twig';
-        $this->variables->ingredient = $what;
-        $this->variables->ordinal = $this->ordinal($bowl);
+        $this->_template = 'methods/put.html.twig';
+        $this->_variables->ingredient = $what;
+        $this->_variables->ordinal = $this->ordinal($bowl);
         return $this;
     }
 
     public function fold(string $what, int $bowl = 1) : ChefMethod
     {
         $this->put($what, $bowl);
-        $this->template = 'methods/fold.html.twig';
+        $this->_template = 'methods/fold.html.twig';
         return $this;
     }
 
     public function add(string $what, int $bowl = 1) : ChefMethod
     {
         $this->put($what, $bowl);
-        $this->template = 'methods/add.html.twig';
+        $this->_template = 'methods/add.html.twig';
         return $this;
     }
 
     public function remove(string $what, int $bowl = 1) : ChefMethod
     {
         $this->put($what, $bowl);
-        $this->template = 'methods/remove.html.twig';
+        $this->_template = 'methods/remove.html.twig';
         return $this;
     }
 
     public function combine(string $what, int $bowl = 1) : ChefMethod
     {
         $this->put($what, $bowl);
-        $this->template = 'methods/combine.html.twig';
+        $this->_template = 'methods/combine.html.twig';
         return $this;
     }
 
     public function divide(string $what, int $bowl = 1) : ChefMethod
     {
         $this->put($what, $bowl);
-        $this->template = 'methods/divide.html.twig';
+        $this->_template = 'methods/divide.html.twig';
         return $this;
     }
 
     public function dry(int $bowl = 1) : ChefMethod
     {
         $this->put('', $bowl);
-        $this->template = 'methods/dry.html.twig';
+        $this->_template = 'methods/dry.html.twig';
         return $this;
     }
 
     public function liquefy(string $what) : ChefMethod
     {
         $this->put($what);
-        $this->template = 'methods/liquefy.html.twig';
+        $this->_template = 'methods/liquefy.html.twig';
         return $this;
     }
 
     public function liquefyContents(int $bowl = 1) : ChefMethod
     {
         $this->put('', $bowl);
-        $this->template = 'methods/liquefyContents.html.twig';
+        $this->_template = 'methods/liquefyContents.html.twig';
         return $this;
     }
 
     public function stir(int $number, int $bowl = 1) : ChefMethod
     {
         $this->put('', $bowl);
-        $this->variables->minutes = $number;
-        $this->template = 'methods/stir.html.twig';
+        $this->_variables->minutes = $number;
+        $this->_template = 'methods/stir.html.twig';
         return $this;
     }
     
     public function pour(int $bowl = 1, int $dish = 1) : ChefMethod
     {
-        $this->variables->bowl = $bowl;
-        $this->variables->dish = $dish;
-        $this->template = 'methods/pour.html.twig';
+        $this->_variables->bowl = $bowl;
+        $this->_variables->dish = $dish;
+        $this->_template = 'methods/pour.html.twig';
         return $this;
     }
     
     public function clean(int $bowl = 1) :ChefMethod
     {
         $this->put('', $bowl);
-        $this->template = 'methods/clean.html.twig';
+        $this->_template = 'methods/clean.html.twig';
         return $this;
     }
     
     public function agitate(string $what) : ChefMethod
     {
         $this->put($what);
-        $this->template = 'methods/agitate.html.twig';
+        $this->_template = 'methods/agitate.html.twig';
         return $this;
     }
     
     public function dissolve(string $what) : ChefMethod
     {
         $this->put($what);
-        $this->template = 'methods/dissolve.html.twig';
+        $this->_template = 'methods/dissolve.html.twig';
         return $this;
     }
     
     public function refrigerate(int $number) : ChefMethod
     {
-        $this->variables->hours = $number;
-        $this->template = 'methods/refrigerate.html.twig';
+        $this->_variables->hours = $number;
+        $this->_template = 'methods/refrigerate.html.twig';
         return $this;
     }
 
