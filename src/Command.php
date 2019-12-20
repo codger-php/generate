@@ -2,18 +2,29 @@
 
 namespace Codger\Generate;
 
+use Monolyth\Cliff;
 use ReflectionFunction;
 use stdClass;
 
-class Bootstrap
+class Command extends Cliff\Command
 {
     /** @var int */
     const ERROR_NO_RECIPE = 1;
     /** @var int */
     const ERROR_RECIPE_NOT_FOUND = 2;
 
-    /** @var string */
-    private $recipe;
+    /**
+     * The base path where output is written to, relative to CWD.
+     *
+     * @var string
+     */
+    public $output;
+    /**
+     * When true, actually (over)write files - otherwise just dump to STDOUT.
+     *
+     * @var bool
+     */
+    public $write = false;
     /** @var string */
     private $path;
     /** @var array */
@@ -21,16 +32,29 @@ class Bootstrap
     /** @var stdClass */
     private $config;
 
-    /**
-     * @param string $recipe The name of the recipe to run.
-     * @param stdClass $config Optional config.
-     * @return void
-     */
-    public function __construct(string $recipe, stdClass $config = null)
+    public function __invoke(string $recipe)
     {
-        $this->recipe = $recipe;
-        $this->path = getcwd();
-        $this->config = $config ?? new stdClass;
+        global $argv;
+        $recipeClass = Recipe::toClassName($recipe);
+        'Codger\\'.preg_replace('@\\\\Command$@', '\Recipe', self::toPhpName($recipe));
+        var_dump($argv);
+        unset($argv[1]);
+        $recipe = new $recipeClass($argv);
+        $arguments = $recipe->getOperands();
+        array_shift($arguments); // script name
+        $recipe(...$arguments);
+    }
+
+    private function parseRecipeToFile(string $recipe) : string
+    {
+        $file = "{$this->path}/recipes/$recipe/Recipe.php";
+        if (strpos($recipe, '@')) {
+            list($vendor, $recipe) = explode('@', $recipe);
+            $file = "{$this->path}/vendor/$vendor/recipes/$recipe/Recipe.php";
+            if (!file_exists($file)) {
+                $file = "{$this->path}/recipes/$recipe/Recipe.php";
+            }
+        }
     }
 
     /**
@@ -42,11 +66,6 @@ class Bootstrap
     public function run(...$argv) : void
     {
         $recipe = $this->recipe;
-        if (isset($this->config->aliases, $this->config->aliases->$recipe)) {
-            $alias = $this->config->aliases->$recipe;
-            $recipe = $alias[0];
-            $argv = array_merge(array_splice($alias, 1), $argv);
-        }
         $file = "{$this->path}/recipes/$recipe/Recipe.php";
         if (strpos($recipe, '@')) {
             list($vendor, $recipe) = explode('@', $recipe);
