@@ -72,7 +72,7 @@ abstract class Recipe extends Command
      */
     public function render() : string
     {
-        return $this->_twig->render($this->template, (array)$this->_variables);
+        return $this->_twig->render($this->_template, (array)$this->_variables);
     }
 
     /**
