@@ -16,21 +16,9 @@ class Command extends Cliff\Command
     /**
      * The base path where output is written to, relative to CWD.
      *
-     * @var string
+     * @var string|null
      */
-    public $output;
-
-    /**
-     * When true, actually (over)write files - otherwise just dump to STDOUT.
-     *
-     * @var bool
-     */
-    public $write = false;
-
-    /** @var string */
-    private $path;
-    /** @var stdClass */
-    private $config;
+    public $output = null;
 
     public function __invoke(string $recipe)
     {
