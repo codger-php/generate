@@ -38,7 +38,7 @@ class Chef extends Recipe
             [0, 'g', 'cake mixture'],
         ]);
         
-        $method = new Method;
+        $method = new Method([]);
         $method->setTwigEnvironment($twig);
         $this->set('comment', <<<EOT
 This prints hello world, while being tastier than Hello World Souffle. The main
