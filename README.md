@@ -54,47 +54,36 @@ All Codger recipes support 2 default options as defined in the
 Whether or not shorthand flags exist depends on your recipe's other options.
 
 ## Writing recipes
-Recipes are expected to be stored in a `recipes` folder in the root of your
-project (i.e., next to the `vendor` folder Composer creates).
+All recipes are regular PHP classes extending `Codger\Generate\Recipe`. The main
+work should be done inside the `__invoke` method. Codger recipes extend the
+`Monolyth\Cliff\Command` class, so (string) parameters to invoke are treated as
+CLI operands. Hence, a recipe called `Codger\Foo` with an `__invoke` signature
+of `(string $name)` would be called as `vendor/bin/codger foo myname`.
 
-> Actually, they're expected in `cwd`, or the current working directory. If for
-> whatever reason you want or need to place your `recipes` directory elsewhere,
-> simply run `codger` from there, e.g. `$ /path/to/vendor/bin/codger recipe`.
+As noted before, Composer should be able to autoload the recipes. E.g., add an
+`autoload-dev` property to your `composer.json` for something like
+`"Codger\\MyNamespace\\": "./recipes"`.
 
-Each recipe needs at least a `Recipe.php` main file. This _must_ return a lambda
-in turn returning an instance of a class extending `Codger\Generate\Recipy`. The
-arguments to the lambda are the additional command line arguments after the name
-of the recipe, in order. Inside the closure, the recipe class can do its thing
-in order to correctly generate code. E.g.:
+Inside the `__invoke` method, your recipe should do its stuff. What that is
+depends on what you want to happen, of course, but generally a recipe should at
+least call `output()` to specify what it is generating, or call `delegate` to
+specify it needs to delegate tasks to a sub-recipe.
 
 ```php
 <?php
 
+namespace Codger\MyNamespace;
+
 use Codger\Generate\Recipe;
 
-return function (string $some, string $argument) : Recipe {
-    $recipe = new class() extends Recipy {
-    };
-    // Do stuff...
-    return $recipe;
-};
+class MyRecipe extends Recipe
+{
+    public function __invoke()
+    {
+        // Do stuff...
+    }
+}
 ```
-
-For a recipe to be useful, it needs to either call
-`Codger\Generate\Recipe::output` to specify the intended output file, or
-delegate to another recipe (see below).
-
-## Writing output
-When the recipe is done, it should call the `output` method (unless it is a
-"master recipe" only meant to delegate tasks). It takes a single argument which
-should contain the full path to the intended target file.
-
-> Output is only written to disk if one of the _flags_ (see above) has been set;
-> the default modus for Codger is to write to STDOUT for inspection.
-
-Typically, the path will be constructed using one or more of the _arguments_
-passed to the recipe; a recipe that only ever updates a single file is probably
-not too useful.
 
 ## Converting arguments
 Use the `Codger\Generate\Language` class to convert arguments for various uses.
@@ -136,7 +125,7 @@ the `Codger\Generate\Recipe::delegate` method.
 
 The first argument is the name of the recipe to delegate to. Any additional
 parameters to `delegate` are passed verbatim as arguments to the delegated
-recipe.
+recipe. All these follow the same rules as when calling from the CLI.
 
 ## User feedback
 Via the `Codger\Generate\InOutTrait` recipes provide the `info` and `error`
