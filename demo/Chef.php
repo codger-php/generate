@@ -109,7 +109,7 @@ EOT
                 ]);
             $this->addSousChef($sauce);
         }
-        $this->output(sys_get_temp_dir().'/chef');
+        $this->output('chef');
     }
 
     protected function setTitle(string $title) : Chef
