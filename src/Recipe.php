@@ -137,11 +137,11 @@ abstract class Recipe extends Command
     {
         $this->_output = function () use ($filename) : void {
             $output = $this->render();
-            if (!isset($this->_outputDir)) {
+            if (!strlen($this->outputDir)) {
                 $output = "\n$filename:\n$output\n";
                 self::$inout->write($output);
             } else {
-                $dir = dirname($filename);
+                $dir = dirname("{$this->outputDir}/$filename");
                 if (file_exists($dir) && !is_dir($dir)) {
                     self::$inout->error("$dir already exists, but is not a directory!");
                 } else {
@@ -150,20 +150,20 @@ abstract class Recipe extends Command
                     }
                     $overwrite = (bool)$this->replace;
                     $dump = false;
-                    if (file_exists($filename) && !$this->replace) {
+                    if (file_exists("$dir/$filename") && !$this->replace) {
                         $this->options(
-                            "$filename already exists, overwrite or dump to screen?",
+                            "$dir/$filename already exists, overwrite or dump to screen?",
                             ['o' => 'Overwrite', 'd' => 'Dump', 's' => 'Skip'],
-                            function ($answer) use (&$overwrite, $dump) {
+                            function ($answer) use (&$overwrite, &$dump) {
                                 $overwrite = $answer == 'o';
                                 $dump = $answer == 'd';
                             }
                         );
                     }
-                    if (!file_exists($filename) || $overwrite) {
-                        file_put_contents($filename, $output);
+                    if (!file_exists("$dir/$filename") || $overwrite) {
+                        file_put_contents("$dir/$filename", $output);
                     } elseif ($dump) {
-                        self::$inout->write("\n$filename:\n$output\n");
+                        self::$inout->write("\n$dir/$filename:\n$output\n");
                     }
                 }
             }
