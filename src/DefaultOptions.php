@@ -9,7 +9,7 @@ trait DefaultOptions
      *
      * @var string
      */
-    public $outputDir = '';
+    public $outputDir;
 
     /**
      * Whether or not to overwrite existing files.
