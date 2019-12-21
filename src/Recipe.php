@@ -14,8 +14,8 @@ abstract class Recipe extends Command
     use InOutTrait;
     use DefaultOptions;
 
-    /** @var Twig_Environment */
-    protected $_twig;
+    /** @var string */
+    protected $_template;
 
     /** @var StdClass */
     protected $_variables;
@@ -25,6 +25,9 @@ abstract class Recipe extends Command
 
     /** @var callable */
     protected $_output;
+
+    /** @var Twig_Environment */
+    private $_twig;
 
     /**
      * Constructor.
@@ -79,7 +82,10 @@ abstract class Recipe extends Command
     public function render() : string
     {
         if (!isset($this->_twig)) {
-            throw new TwigEnvironmentNotSetException(get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
+            throw new TwigEnvironmentNotSetException("Missing Twig environment in ".get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
+        }
+        if (!isset($this->_template)) {
+            throw new TwigEnvironmentNotSetException("Missing template in ".get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
         }
         return $this->_twig->render($this->_template, (array)$this->_variables);
     }
