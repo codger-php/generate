@@ -79,7 +79,10 @@ abstract class Recipe extends Command
     public function render() : string
     {
         if (!isset($this->_twig)) {
-            throw new TwigEnvironmentNotSetException(get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
+            throw new TwigEnvironmentNotSetException("Missing Twig environment in ".get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
+        }
+        if (!isset($this->_template)) {
+            throw new TwigEnvironmentNotSetException("Missing template in ".get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
         }
         return $this->_twig->render($this->_template, (array)$this->_variables);
     }
