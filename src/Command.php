@@ -11,11 +11,13 @@ class Command extends Cliff\Command
     use DefaultOptions;
 
     /** @var int */
-    const ERROR_NO_RECIPE = 1;
+    const ERROR_NO_RECIPE = 2;
     /** @var int */
-    const ERROR_RECIPE_NOT_FOUND = 2;
+    const ERROR_RECIPE_NOT_FOUND = 3;
     /** @var int */
-    const ERROR_RECIPE_IS_NOT_A_RECIPE_EXCEPTION = 3;
+    const ERROR_RECIPE_IS_NOT_A_RECIPE_EXCEPTION = 4;
+    /** @var int */
+    const ERROR_TWIG_ENVIRONMENT_NOT_SET = 5;
 
     /** @var array|null */
     private $_arguments;
