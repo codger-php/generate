@@ -10,7 +10,5 @@ $config = file_exists("$dir/Codger.json") ? json_decode(file_get_contents("$dir/
 if (isset($args[0], $config->aliases, $config->aliases->{$args[0]})) {
     $args = array_merge($this->config->aliases->{$args[0]}, array_splice($args, 1));
 }
-$command = new Command($args, false);
-$arguments = $command->getArguments();
-$command(...$arguments);
+passthru('vendor/bin/cliff codger/generate '.implode(' ', $args));
 
