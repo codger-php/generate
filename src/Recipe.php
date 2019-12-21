@@ -53,6 +53,19 @@ abstract class Recipe extends Command
     }
 
     /**
+     * Persist all passed options as Twig variables.
+     *
+     * @return void
+     */
+    protected function persistOptionsToTwig() : void
+    {
+        $reflection = new ReflectionObject($this);
+        foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC & ~ReflectionProperty::IS_STATIC) as $property) {
+            $this->set($property->name, $property->getValue($this));
+        }
+    }
+
+    /**
      * Set a variable to later be passed to Twig.
      *
      * @param string $name
