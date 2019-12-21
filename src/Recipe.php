@@ -5,6 +5,8 @@ namespace Codger\Generate;
 use Twig_Environment;
 use StdClass;
 use Monolyth\Cliff\Command;
+use ReflectionObject;
+use ReflectionProperty;
 
 /**
  * Base Recipe class all other recipes should extend.
