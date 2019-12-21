@@ -35,20 +35,23 @@ this are as follows:
 - characters following a hyphen are uppercased;
 - other characters are lowercased, barring the first which is uppercased.
 
-Thus, a recipe `monolyth:codger:some-test` would resolve to the namespace
-`Monolyth\\Codger\\SomeTest`.
+Additionally, all recipes are prefixed with the `Codger` namespace. This allows
+you to easily group them in a directory outside of your regular source code,
+e.g. a `./recipes` folder.
 
-## Flags
-Apart from additional arguments, Codger supports four flags. These can be placed
-anywhere in the command argument list (though putting them last makes most sense
-generally) but _after_ the `name-of-recipe`:
+Thus, a recipe `monolyth:some-test` would resolve to the namespace
+`Codger\\Monolyth\\SomeTest`.
 
-- `-w` to actually write files (Codger defaults to outputting to `STDOUT`);
-- `-o` to _over_write files. Note that this implicitly sets `-w` too;
-- `-d` to _dump_ files. This dumps the generated contents to `STDOUT` _but only
-  if the file already exists_; otherwise, the file will be written as if `-w`;
-  was set;
-- `-s` to skip files that exist. This too implies `-w`.
+## Default options
+All Codger recipes support 2 default options as defined in the
+`Codger\Generate\DefaultOptions` trait:
+
+- `--output-dir=/some/path`. Supply this to actually attempt to write generated
+  files to disk; the default is to dump to screen for manual inspection.
+- `--replace`. If this flag is set, existing files will be overwritten without
+  warning (the default is to prompt for overwrite, dump or skip).
+
+Whether or not shorthand flags exist depends on your recipe's other options.
 
 ## Writing recipes
 Recipes are expected to be stored in a `recipes` folder in the root of your
