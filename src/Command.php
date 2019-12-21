@@ -15,15 +15,28 @@ class Command extends Cliff\Command
     /** @var int */
     const ERROR_RECIPE_NOT_FOUND = 2;
 
+    /** @var array */
+    private $arguments = [];
+
+    public function __construct(array $arguments = null, bool $strict = true)
+    {
+        parent::__construct($arguments, $strict);
+        $this->arguments = $arguments;
+    }
+
     public function __invoke(string $recipe)
     {
-        global $argv;
+        $argv = $this->arguments;
         $recipeClass = Recipe::toClassName($recipe);
-        unset($argv[1]);
-        $recipe = new $recipeClass($argv);
-        $arguments = $recipe->getOperands();
-        array_shift($arguments); // script name
-        $recipe(...$arguments);
+        if (!class_exists($recipeClass)) {
+            throw new RecipeNotFoundException("The recipe `$recipeClass` could not be autoloaded; does it exist?", self::ERROR_RECIPE_NOT_FOUND);
+        } else {
+            $recipe = new $recipeClass($argv);
+            $arguments = $recipe->getOperands();
+            array_shift($arguments); // script name
+            $recipe(...$arguments);
+            $recipe->process();
+        }
     }
 }
 
