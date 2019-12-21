@@ -32,9 +32,7 @@ class Command extends Cliff\Command
             throw new RecipeNotFoundException("The recipe `$recipeClass` could not be autoloaded; does it exist?", self::ERROR_RECIPE_NOT_FOUND);
         } else {
             $recipe = new $recipeClass($argv);
-            $arguments = $recipe->getOperands();
-            array_shift($arguments); // script name
-            $recipe(...$arguments);
+            $recipe->execute();
             $recipe->process();
         }
     }
