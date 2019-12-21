@@ -7,9 +7,9 @@ trait DefaultOptions
     /**
      * The base path where output is written to, relative to CWD.
      *
-     * @var string|null
+     * @var string
      */
-    public $outputDir = null;
+    public $outputDir = '';
 
     /**
      * Whether or not to overwrite existing files.
