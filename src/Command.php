@@ -33,7 +33,7 @@ class Command extends Cliff\Command
         if (isset($this->_arguments)) {
             $argv = $this->_arguments;
         } else {
-            $argv = $this->$_SERVER['argv'];
+            $argv = $_SERVER['argv'];
             array_shift($argv); // The executable. Ignore.
         }
         array_shift($argv); // This was the recipe name; no longer needed.
