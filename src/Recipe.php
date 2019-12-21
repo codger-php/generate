@@ -12,13 +12,19 @@ use Monolyth\Cliff\Command;
 abstract class Recipe extends Command
 {
     use InOutTrait;
+    use DefaultOptions;
 
     /** @var Twig_Environment */
     protected $_twig;
+
     /** @var StdClass */
     protected $_variables;
+
     /** @var bool */
     protected $_delegated = false;
+
+    /** @var callable */
+    protected $_output;
 
     /**
      * Constructor.
@@ -93,9 +99,10 @@ abstract class Recipe extends Command
     }
 
     /**
-     * Like `Codger\Recipe::ask`, except supplying a list of valid options to
-     * choose from. The _index_ of the selected option is passed to `$callback`.
-     * If the index is a string, it is a shortcut for the full answer.
+     * Like `Codger\Generate\Recipe::ask`, except supplying a list of valid
+     * options to choose from. The _index_ of the selected option is passed to
+     * `$callback`. If the index is a string, it is a shortcut for the full
+     * answer.
      *
      * @param string $question
      * @param array $options
@@ -128,9 +135,9 @@ abstract class Recipe extends Command
      */
     public function output(string $filename) : Recipe
     {
-        $this->output = function () use ($filename) : void {
+        $this->_output = function () use ($filename) : void {
             $output = $this->render();
-            if (getenv("CODGER_DRY")) {
+            if (!isset($this->_outputDir)) {
                 $output = "\n$filename:\n$output\n";
                 self::$inout->write($output);
             } else {
@@ -141,15 +148,15 @@ abstract class Recipe extends Command
                     if (!file_exists($dir)) {
                         mkdir($dir, 0755, true);
                     }
-                    $overwrite = (bool)getenv("CODGER_OVERWRITE");
-                    $dump = (bool)getenv("CODGER_DUMP");
-                    $skip = (bool)getenv("CODGER_SKIP");
-                    if (file_exists($filename) && !($overwrite || $dump || $skip)) {
+                    $overwrite = (bool)$this->replace;
+                    $dump = false;
+                    if (file_exists($filename) && !$this->replace) {
                         $this->options(
                             "$filename already exists, overwrite or dump to screen?",
                             ['o' => 'Overwrite', 'd' => 'Dump', 's' => 'Skip'],
-                            function ($answer) use (&$overwrite) {
+                            function ($answer) use (&$overwrite, $dump) {
                                 $overwrite = $answer == 'o';
+                                $dump = $answer == 'd';
                             }
                         );
                     }
@@ -171,8 +178,8 @@ abstract class Recipe extends Command
      */
     public function process() : void
     {
-        if (isset($this->output)) {
-            $this->output->call($this);
+        if (isset($this->_output)) {
+            $this->_output->call($this);
         } elseif (!$this->_delegated) {
             self::$inout->error("Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
         }
