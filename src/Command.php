@@ -17,9 +17,9 @@ class Command extends Cliff\Command
     /** @var int */
     const ERROR_RECIPE_IS_NOT_A_RECIPE_EXCEPTION = 3;
 
-    public function __construct()
+    public function __construct(array $arguments = null)
     {
-        parent::__construct(null, false);
+        parent::__construct($arguments, false);
     }
 
     public function __invoke(string $recipe)
