@@ -25,16 +25,18 @@ $ composer require --dev codger/generate
 
 ## Usage
 ```sh
-$ vendor/bin/codger name-of-recipe some additional arguments
+$ vendor/bin/codger name-of-recipe some additional arguments --or --options
 ```
 
-You can optionally include the vendor/package name if this recipe is located in
-an external package. Separate it from the recipe name using an `@` symbol:
-`vendor/bin/codger vendor/package@recipe`.
+The name of the recipe should be resolvable to a PHP class name. The rules for
+this are as follows:
 
-Namespaced recipes are first searched for in the `vendor` directory, and if not
-found there additionally in the current working directory (so namespaced recipes
-will work in their local package).
+- slashes or semicolons are converted to backslashes (namespace separator);
+- characters following a hyphen are uppercased;
+- other characters are lowercased, barring the first which is uppercased.
+
+Thus, a recipe `monolyth:codger:some-test` would resolve to the namespace
+`Monolyth\\Codger\\SomeTest`.
 
 ## Flags
 Apart from additional arguments, Codger supports four flags. These can be placed
