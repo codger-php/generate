@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "monolyth/cliff",
-            "version": "0.5.1",
+            "version": "0.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/monolyth-php/cliff.git",
-                "reference": "45c1a968f1b33bf6a6df567255d8ba23d92bc1b5"
+                "reference": "503a03e71a7b055eea743161f9c1cb429aeca84d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/monolyth-php/cliff/zipball/45c1a968f1b33bf6a6df567255d8ba23d92bc1b5",
-                "reference": "45c1a968f1b33bf6a6df567255d8ba23d92bc1b5",
+                "url": "https://api.github.com/repos/monolyth-php/cliff/zipball/503a03e71a7b055eea743161f9c1cb429aeca84d",
+                "reference": "503a03e71a7b055eea743161f9c1cb429aeca84d",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 }
             ],
             "description": "Command line interface for Monolyth unframework",
-            "time": "2019-12-20T15:27:38+00:00"
+            "time": "2019-12-21T05:55:28+00:00"
         },
         {
             "name": "monomelodies/reflex",
