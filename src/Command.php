@@ -15,7 +15,7 @@ class Command extends Cliff\Command
     /** @var int */
     const ERROR_RECIPE_NOT_FOUND = 3;
     /** @var int */
-    const ERROR_RECIPE_IS_NOT_A_RECIPE_EXCEPTION = 4;
+    const ERROR_RECIPE_IS_NOT_A_RECIPE = 4;
     /** @var int */
     const ERROR_TWIG_ENVIRONMENT_NOT_SET = 5;
 
