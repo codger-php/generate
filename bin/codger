@@ -3,12 +3,24 @@
 
 namespace Codger\Generate;
 
+require_once getcwd().'/vendor/autoload.php';
+
 $args = $argv;
 array_shift($args);
 $dir = getcwd();
 $config = file_exists("$dir/Codger.json") ? json_decode(file_get_contents("$dir/Codger.json")) : null;
 if (isset($args[0], $config->aliases, $config->aliases->{$args[0]})) {
     $args = array_merge($this->config->aliases->{$args[0]}, array_splice($args, 1));
+}
+if (!count($args)) {
+    fwrite(STDERR, <<<EOT
+
+You must pass at least the name of a recipe; see the documentation in README.md.
+
+
+EOT
+    );
+    exit(Command::ERROR_NO_RECIPE);
 }
 passthru('vendor/bin/cliff codger/generate '.implode(' ', $args));
 
