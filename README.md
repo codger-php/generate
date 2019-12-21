@@ -85,6 +85,22 @@ class MyRecipe extends Recipe
 }
 ```
 
+## Setting the Twig environment
+Codger uses Twig internally to convert recipes to actual code. This means you
+_will_ need to set your Twig environment since we can't guesstimate how your
+code is organised. Do this using the `setTwigEnvironment` method on the recipe:
+
+```php
+<?php
+
+// ...
+    $this->setTwigEnvironment($twig);
+// ...
+```
+
+Failure to do so will cause Codger to exit with status code 5 on rendering. Note
+that a "master recipe" that only delegates stuff will not need to call this.
+
 ## Converting arguments
 Use the `Codger\Generate\Language` class to convert arguments for various uses.
 E.g., a PHP module `Foo\Bar` might be written to `src/Foo/Bar.php`. The
