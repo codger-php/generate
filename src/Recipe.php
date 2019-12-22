@@ -22,8 +22,8 @@ abstract class Recipe extends Cliff\Command
     /** @var StdClass */
     protected $_variables;
 
-    /** @var bool */
-    protected $_delegated = false;
+    /** @var array */
+    protected $_delegated = [];
 
     /** @var callable */
     protected $_output;
@@ -207,6 +207,13 @@ abstract class Recipe extends Cliff\Command
         } elseif (!$this->_delegated) {
             self::$inout->error("Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
         }
+        array_walk($this->_delegated, function ($recipe) {
+            self::$inout->write(sprintf(
+                "  > Delegating to %s...\n",
+                get_class($recipe)
+            ));
+            $recipe->process();
+        });
     }
 
     /**
@@ -221,7 +228,7 @@ abstract class Recipe extends Cliff\Command
         $recipeClass = self::toClassName($recipe);
         $recipe = new $recipeClass($arguments);
         $recipe->execute();
-        $this->_delegated = true;
+        $this->_delegated[] = $recipe;
         return $this;
     }
 
@@ -255,7 +262,7 @@ abstract class Recipe extends Cliff\Command
 
     public static function toClassName(string $recipe) : string
     {
-        return 'Codger\\'.preg_replace('@\\\\Command$@', '\Recipe', self::toPhpName($recipe));
+        return 'Codger\\'.preg_replace('@\\\\Command$@', '', self::toPhpName($recipe));
     }
 }
 
