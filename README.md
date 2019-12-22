@@ -139,9 +139,9 @@ Some recipes will want to make use of other recipes. This way you can "chain"
 recipes together to build more complex recipes. Delegating is done by calling
 the `Codger\Generate\Recipe::delegate` method.
 
-The first argument is the name of the recipe to delegate to. Any additional
-parameters to `delegate` are passed verbatim as arguments to the delegated
-recipe. All these follow the same rules as when calling from the CLI.
+The first argument is the name of the recipe to delegate to. The optional second
+argument is an array of arguments to pass to the delegated recipe, as if it were
+called from the CLI.
 
 ## User feedback
 Via the `Codger\Generate\InOutTrait` recipes provide the `info` and `error`
