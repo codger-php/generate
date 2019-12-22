@@ -223,11 +223,16 @@ abstract class Recipe extends Cliff\Command
      *  the CLI name, or the actual classname.
      * @param array $arguments|null Arguments.
      * @return Codger\Generate\Recipe Itself for chaining.
+     * @throws Codger\Generate\RecipeNotFoundException
      */
     public function delegate(string $recipe, array $arguments = null) : Recipe
     {
         $recipeClass = class_exists($recipe) ? $recipe : self::toClassName($recipe);
-        $recipe = new $recipeClass($arguments);
+        try {
+            $recipe = new $recipeClass($arguments);
+        } catch (Error $e) {
+            throw new RecipeNotFoundException($recipe);
+        }
         $recipe->execute();
         $this->_delegated[] = $recipe;
         return $this;
