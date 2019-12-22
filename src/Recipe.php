@@ -4,14 +4,14 @@ namespace Codger\Generate;
 
 use Twig_Environment;
 use StdClass;
-use Monolyth\Cliff\Command;
+use Monolyth\Cliff;
 use ReflectionObject;
 use ReflectionProperty;
 
 /**
  * Base Recipe class all other recipes should extend.
  */
-abstract class Recipe extends Command
+abstract class Recipe extends Cliff\Command
 {
     use InOutTrait;
     use DefaultOptions;
@@ -213,16 +213,14 @@ abstract class Recipe extends Command
      * Delegate to a sub-recipe.
      *
      * @param string $recipe The name of the recipe to delegate to.
-     * @param mixed ...$args Extra arguments.
+     * @param array $arguments|null Arguments.
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function delegate(string $recipe, ...$args) : Recipe
+    public function delegate(string $recipe, array $arguments = null) : Recipe
     {
         $recipeClass = self::toClassName($recipe);
-        $recipe = new $recipeClass($args);
-        $arguments = $recipe->getOperands();
-        array_shift($arguments); // script name
-        $recipe(...$arguments);
+        $recipe = new $recipeClass($arguments);
+        $recipe->execute();
         $this->_delegated = true;
         return $this;
     }
