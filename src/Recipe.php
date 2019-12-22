@@ -219,13 +219,14 @@ abstract class Recipe extends Cliff\Command
     /**
      * Delegate to a sub-recipe.
      *
-     * @param string $recipe The name of the recipe to delegate to.
+     * @param string $recipe The name of the recipe to delegate to. This can be
+     *  the CLI name, or the actual classname.
      * @param array $arguments|null Arguments.
      * @return Codger\Generate\Recipe Itself for chaining.
      */
     public function delegate(string $recipe, array $arguments = null) : Recipe
     {
-        $recipeClass = self::toClassName($recipe);
+        $recipeClass = class_exists($recipe) ? $recipe : self::toClassName($recipe);
         $recipe = new $recipeClass($arguments);
         $recipe->execute();
         $this->_delegated[] = $recipe;
