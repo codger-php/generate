@@ -22,7 +22,7 @@ class Chef extends Recipe
         $this->_variables->souschefs = [];
         $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
         $this->setTwigEnvironment($twig);
-        $ingredients = new class() extends Chef {
+        $ingredients = new class([]) extends Chef {
             protected $_template = 'ingredients.html.twig';
         };
         $ingredients->setTwigEnvironment($twig);
@@ -77,7 +77,7 @@ EOT
             });
         }
         if ($this->sauce) {
-            $ingredients = new class() extends Chef {
+            $ingredients = new class([]) extends Chef {
                 protected $_template = 'ingredients.html.twig';
             };
             $ingredients->setTwigEnvironment($twig);
@@ -88,7 +88,7 @@ EOT
                 [101, 'g', 'dark chocolate'],
                 [72, 'g', 'milk chocolate']
             ]);
-            $sauce = new Chef;
+            $sauce = new Chef([]);
             $sauce->setTwigEnvironment($twig);
             $sauce->setTitle('Chocolate sauce')
                 ->set('ingredients', $ingredients->render())
