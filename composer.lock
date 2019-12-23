@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be86b4997f0f71c4b6f43c158c4720ae",
+    "content-hash": "09f8de14bcfbba28866e9c13cd14fda9",
     "packages": [
         {
             "name": "monolyth/cliff",
-            "version": "0.5.3",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/monolyth-php/cliff.git",
-                "reference": "d5d93e5734b10caab151fac1bf5d06fda039035a"
+                "reference": "621ab4483a473244bf580207c2ce1d6a27148a80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/monolyth-php/cliff/zipball/d5d93e5734b10caab151fac1bf5d06fda039035a",
-                "reference": "d5d93e5734b10caab151fac1bf5d06fda039035a",
+                "url": "https://api.github.com/repos/monolyth-php/cliff/zipball/621ab4483a473244bf580207c2ce1d6a27148a80",
+                "reference": "621ab4483a473244bf580207c2ce1d6a27148a80",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 }
             ],
             "description": "Command line interface for Monolyth unframework",
-            "time": "2019-12-21T06:53:36+00:00"
+            "time": "2019-12-23T09:31:52+00:00"
         },
         {
             "name": "monomelodies/reflex",
@@ -522,16 +522,16 @@
         },
         {
             "name": "toast/unit",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/toast-php/unit.git",
-                "reference": "8d4a85038bd42162f661f63bba173279bb6573b7"
+                "reference": "3b992a32c895fd0eafd1a10335ec9a32004e39ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/toast-php/unit/zipball/8d4a85038bd42162f661f63bba173279bb6573b7",
-                "reference": "8d4a85038bd42162f661f63bba173279bb6573b7",
+                "url": "https://api.github.com/repos/toast-php/unit/zipball/3b992a32c895fd0eafd1a10335ec9a32004e39ac",
+                "reference": "3b992a32c895fd0eafd1a10335ec9a32004e39ac",
                 "shasum": ""
             },
             "require": {
@@ -559,7 +559,7 @@
                 }
             ],
             "description": "Super-simple unit testing for PHP7",
-            "time": "2019-11-08T14:52:41+00:00"
+            "time": "2019-12-21T13:50:00+00:00"
         }
     ],
     "aliases": [],
