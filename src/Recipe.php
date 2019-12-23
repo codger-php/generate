@@ -34,11 +34,13 @@ abstract class Recipe extends Cliff\Command
     /**
      * Constructor.
      *
+     * @param array|null $arguments
+     * @param Monolyth\Cliff\Command|null $forwardingCommand
      * @return void
      */
-    public function __construct(array $arguments = null, bool $strict = true)
+    public function __construct(array $arguments = null, Cliff\Command $forwardingCommand = null)
     {
-        parent::__construct($arguments, $strict);
+        parent::__construct($arguments, $forwardingCommand);
         $this->_variables = new StdClass;
         self::initInOut();
     }
@@ -264,6 +266,12 @@ abstract class Recipe extends Cliff\Command
     {
         self::$inout->error("\n$error\n");
         return $this;
+    }
+
+    public function execute() : void
+    {
+        parent::execute();
+        $this->process();
     }
 
     public static function toClassName(string $recipe) : string
