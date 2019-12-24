@@ -104,7 +104,9 @@ abstract class Recipe extends Cliff\Command
         if (!isset($this->_template)) {
             throw new TwigEnvironmentNotSetException("Missing template in ".get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
         }
-        return $this->_twig->render($this->_template, (array)$this->_variables);
+        $variables = (array)$this->_variables;
+        array_walk($variables, [$this, 'preProcess']);
+        return $this->_twig->render($this->_template, $variables);
     }
 
     /**
@@ -268,15 +270,42 @@ abstract class Recipe extends Cliff\Command
         return $this;
     }
 
+    /**
+     * Execute and process the recipe.
+     *
+     * @return void
+     */
     public function execute() : void
     {
         parent::execute();
         $this->process();
     }
 
+    /**
+     * Convert the CLI recipe into a fully qualified classname.
+     *
+     * @param string $recipe
+     * @return string
+     */
     public static function toClassName(string $recipe) : string
     {
         return 'Codger\\'.preg_replace('@\\\\Command$@', '', self::toPhpName($recipe));
+    }
+
+    /**
+     * Internal helper to recursively render passed variables.
+     *
+     * @param mixed &$element
+     * @return void
+     */
+    private function preProcess(&$element) : void
+    {
+        if (is_object($element) && method_exists($element, 'render')) {
+            $element = $element->render();
+        }
+        if (is_array($element)) {
+            array_walk($element, [$this, 'preProcess']);
+        }
     }
 }
 
