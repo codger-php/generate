@@ -216,6 +216,7 @@ abstract class Recipe extends Cliff\Command
                 "  > Delegating to %s...\n",
                 get_class($recipe)
             ));
+            $recipe->execute();
             $recipe->process();
         });
     }
@@ -237,7 +238,6 @@ abstract class Recipe extends Cliff\Command
         } catch (Error $e) {
             throw new RecipeNotFoundException($recipe);
         }
-        $recipe->execute();
         $this->_delegated[] = $recipe;
         return $this;
     }
