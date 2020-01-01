@@ -166,8 +166,10 @@ abstract class Recipe extends Cliff\Command
         $this->_output = function () use ($filename) : void {
             $output = $this->render();
             if (!strlen($this->outputDir)) {
-                $output = "\n$filename:\n$output\n";
-                self::$inout->write($output);
+                if (!($this->_forwardedFrom instanceof Recipe)) {
+                    $output = "\n$filename:\n$output\n";
+                    self::$inout->write($output);
+                }
             } else {
                 $dir = dirname("{$this->outputDir}/$filename");
                 if (file_exists($dir) && !is_dir($dir)) {
@@ -178,9 +180,9 @@ abstract class Recipe extends Cliff\Command
                     }
                     $overwrite = (bool)$this->replace;
                     $dump = false;
-                    if (file_exists("$dir/$filename") && !$this->replace) {
+                    if (file_exists("{$this->outputDir}/$filename") && !$this->replace) {
                         $this->options(
-                            "$dir/$filename already exists, overwrite or dump to screen?",
+                            "{$this->outputDir}/$filename already exists, overwrite or dump to screen?",
                             ['o' => 'Overwrite', 'd' => 'Dump', 's' => 'Skip'],
                             function ($answer) use (&$overwrite, &$dump) {
                                 $overwrite = $answer == 'o';
@@ -188,10 +190,10 @@ abstract class Recipe extends Cliff\Command
                             }
                         );
                     }
-                    if (!file_exists("$dir/$filename") || $overwrite) {
-                        file_put_contents("$dir/$filename", $output);
+                    if (!file_exists("{$this->outputDir}/$filename") || $overwrite) {
+                        file_put_contents("{$this->outputDir}/$filename", $output);
                     } elseif ($dump) {
-                        self::$inout->write("\n$dir/$filename:\n$output\n");
+                        self::$inout->write("\n{$this->outputDir}/$filename:\n$output\n");
                     }
                 }
             }
