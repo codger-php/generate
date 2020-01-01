@@ -3,8 +3,7 @@
 namespace Codger\Demo;
 
 use Codger\Generate\Recipe;
-use Twig_Environment;
-use Twig_Loader_Filesystem;
+use Twig\{ Environment, Loader\FilesystemLoader };
 
 class Chef extends Recipe
 {
@@ -20,7 +19,7 @@ class Chef extends Recipe
             $this->setTitle($title);
         }
         $this->_variables->souschefs = [];
-        $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__));
+        $twig = new Environment(new FilesystemLoader(__DIR__));
         $this->setTwigEnvironment($twig);
         $ingredients = new class([]) extends Chef {
             protected $_template = 'ingredients.html.twig';
