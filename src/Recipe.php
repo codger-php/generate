@@ -2,7 +2,7 @@
 
 namespace Codger\Generate;
 
-use Twig_Environment;
+use Twig\Environment;
 use StdClass;
 use Monolyth\Cliff;
 use ReflectionObject;
@@ -28,7 +28,7 @@ abstract class Recipe extends Cliff\Command
     /** @var callable */
     protected $_output;
 
-    /** @var Twig_Environment */
+    /** @var Twig\Environment */
     private $_twig;
 
     /**
@@ -48,10 +48,10 @@ abstract class Recipe extends Cliff\Command
     /**
      * Set the Twig environment to be used.
      *
-     * @param Twig_Environment $_twig
+     * @param Twig\Environment $_twig
      * @return void
      */
-    protected function setTwigEnvironment(Twig_Environment $_twig)
+    protected function setTwigEnvironment(Environment $_twig)
     {
         $this->_twig = $_twig;
     }
