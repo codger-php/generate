@@ -22,6 +22,6 @@ EOT
     );
     exit(Command::ERROR_NO_RECIPE);
 }
-$args[1] = "codger/{$args[1]}";
+$args[0] = "codger/{$args[0]}";
 passthru('vendor/bin/cliff codger/generate '.implode(' ', $args));
 
