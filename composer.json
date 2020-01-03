@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=7.3",
-        "twig/twig": "^3",
+        "twig/twig": "^2|^3",
         "monolyth/cliff": "^0.6.0"
     },
     "autoload": {
