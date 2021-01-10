@@ -1,6 +1,6 @@
 <?php
 
-/** Testsuite for Codger\Generate\FakeInOut */
+/** Testsuite for fake in/output */
 return function () : Generator {
     $object = new Codger\Generate\FakeInOut;
     /** read yields $result === '0' */
