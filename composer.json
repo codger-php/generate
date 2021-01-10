@@ -13,9 +13,9 @@
         "bin/codger"
     ],
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "twig/twig": "^2|^3",
-        "monolyth/cliff": "^0.6.0"
+        "monolyth/cliff": "^0.7.0"
     },
     "autoload": {
         "psr-4": {
