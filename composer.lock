@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6e98a251e65e76afb849e728e561514",
+    "content-hash": "36e93402e8913cecd53baf80da51888c",
     "packages": [
         {
             "name": "monolyth/cliff",
-            "version": "0.7.0",
+            "version": "0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/monolyth-php/cliff.git",
-                "reference": "d1f756b60cd93b56ac48d48041d48351043604fe"
+                "reference": "929d08d7c8664984908ba7a2720d15f117519462"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/monolyth-php/cliff/zipball/d1f756b60cd93b56ac48d48041d48351043604fe",
-                "reference": "d1f756b60cd93b56ac48d48041d48351043604fe",
+                "url": "https://api.github.com/repos/monolyth-php/cliff/zipball/929d08d7c8664984908ba7a2720d15f117519462",
+                "reference": "929d08d7c8664984908ba7a2720d15f117519462",
                 "shasum": ""
             },
             "require": {
                 "monomelodies/reflex": "^0.3.0",
-                "php": ">=7.3",
+                "php": ">=7.4",
                 "ulrichsg/getopt-php": "^3.2",
                 "zeptech/annotations": "^1.1"
             },
@@ -50,7 +50,7 @@
                 }
             ],
             "description": "Command line interface for Monolyth unframework",
-            "time": "2021-01-05T16:15:13+00:00"
+            "time": "2021-01-10T16:13:25+00:00"
         },
         {
             "name": "monomelodies/reflex",
