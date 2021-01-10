@@ -3,7 +3,7 @@
 $inout = new Codger\Generate\FakeInOut;
 Codger\Generate\Recipe::setInOut($inout);
 
-/** Testsuite for Codger\Generate\Command */
+/** Testsuite for the main generate command */
 return function () use ($inout) : Generator {
 
     /** We can execute the demo command and get a chocolate cake. */
