@@ -35,12 +35,11 @@ abstract class Recipe extends Cliff\Command
      * Constructor.
      *
      * @param array|null $arguments
-     * @param Monolyth\Cliff\Command|null $forwardingCommand
      * @return void
      */
-    public function __construct(array $arguments = null, Cliff\Command $forwardingCommand = null)
+    public function __construct(array $arguments = null)
     {
-        parent::__construct($arguments, $forwardingCommand);
+        parent::__construct($arguments);
         $this->_variables = new StdClass;
         self::initInOut();
     }
@@ -166,10 +165,8 @@ abstract class Recipe extends Cliff\Command
         $this->_output = function () use ($filename) : void {
             $output = $this->render();
             if (!strlen($this->outputDir)) {
-                if (!($this->_forwardedFrom instanceof Recipe)) {
-                    $output = "\n$filename:\n$output\n";
-                    self::$inout->write($output);
-                }
+                $output = "\n$filename:\n$output\n";
+                self::$inout->write($output);
             } else {
                 $dir = dirname("{$this->outputDir}/$filename");
                 if (file_exists($dir) && !is_dir($dir)) {
@@ -291,7 +288,7 @@ abstract class Recipe extends Cliff\Command
      */
     public static function toClassName(string $recipe) : string
     {
-        return 'Codger\\'.preg_replace('@\\\\Command$@', '', self::toPhpName($recipe));
+        return preg_replace('@\\\\Command$@', '', self::toPhpName($recipe));
     }
 
     /**
