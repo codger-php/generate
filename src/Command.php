@@ -3,7 +3,6 @@
 namespace Codger\Generate;
 
 use Monolyth\Cliff;
-use ReflectionFunction;
 use stdClass;
 
 /**
@@ -26,18 +25,17 @@ class Command extends Cliff\Command
     const ERROR_TWIG_ENVIRONMENT_NOT_SET = 5;
 
     /** @var array|null */
-    private $_arguments;
+    private ?array $_arguments;
 
     /**
      * Constructor.
      *
      * @param array|null $arguments
-     * @param Monolyth\Cliff\Command|null $forwardingCommand
      * @return void
      */
-    public function __construct(array $arguments = null, Cliff\Command $forwardingCommand = null)
+    public function __construct(array $arguments = null)
     {
-        parent::__construct($arguments, $forwardingCommand);
+        parent::__construct($arguments);
         $this->_arguments = $arguments;
     }
 
