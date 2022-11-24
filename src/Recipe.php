@@ -7,6 +7,7 @@ use StdClass;
 use Monolyth\Cliff;
 use ReflectionObject;
 use ReflectionProperty;
+use Closure;
 
 /**
  * Base Recipe class all other recipes should extend.
@@ -16,20 +17,15 @@ abstract class Recipe extends Cliff\Command
     use InOutTrait;
     use DefaultOptions;
 
-    /** @var string */
-    protected $_template;
+    protected string $_template;
 
-    /** @var StdClass */
-    protected $_variables;
+    protected stdClass $_variables;
 
-    /** @var array */
-    protected $_delegated = [];
+    protected array $_delegated = [];
 
-    /** @var callable */
-    protected $_output;
+    protected Closure $_output;
 
-    /** @var Twig\Environment */
-    private $_twig;
+    private Environment $_twig;
 
     /**
      * Constructor.
@@ -50,7 +46,7 @@ abstract class Recipe extends Cliff\Command
      * @param Twig\Environment $_twig
      * @return void
      */
-    protected function setTwigEnvironment(Environment $_twig)
+    protected function setTwigEnvironment(Environment $_twig) : void
     {
         $this->_twig = $_twig;
     }
@@ -75,7 +71,7 @@ abstract class Recipe extends Cliff\Command
      * @param mixed $value
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function set(string $name, $value) : Recipe
+    public function set(string $name, $value) : self
     {
         $this->_variables->$name = $value;
         return $this;
@@ -85,7 +81,7 @@ abstract class Recipe extends Cliff\Command
      * @param string $name
      * @return mixed
      */
-    public function get(string $name)
+    public function get(string $name) : mixed
     {
         return $this->_variables->$name ?? null;
     }
@@ -117,7 +113,7 @@ abstract class Recipe extends Cliff\Command
      * @param callable $callback
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function ask(string $question, callable $callback) : Recipe
+    public function ask(string $question, callable $callback) : self
     {
         self::$inout->write("$question ");
         $answer = self::$inout->read();
@@ -136,7 +132,7 @@ abstract class Recipe extends Cliff\Command
      * @param callable $callback
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function options(string $question, array $options, callable $callback) : Recipe
+    public function options(string $question, array $options, callable $callback) : self
     {
         self::$inout->write("$question\n\n");
         foreach ($options as $index => $option) {
@@ -160,11 +156,11 @@ abstract class Recipe extends Cliff\Command
      * @param string $filename
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function output(string $filename) : Recipe
+    public function output(string $filename) : self
     {
-        $this->_output = function () use ($filename) : void {
+        $this->_output = Closure::fromCallable(function () use ($filename) : void {
             $output = $this->render();
-            if (!strlen($this->outputDir)) {
+            if (!isset($this->outputDir)) {
                 $output = "\n$filename:\n$output\n";
                 self::$inout->write($output);
             } else {
@@ -194,7 +190,7 @@ abstract class Recipe extends Cliff\Command
                     }
                 }
             }
-        };
+        });
         return $this;
     }
 
@@ -229,7 +225,7 @@ abstract class Recipe extends Cliff\Command
      * @return Codger\Generate\Recipe Itself for chaining.
      * @throws Codger\Generate\RecipeNotFoundException
      */
-    public function delegate(string $recipe, array $arguments = null) : Recipe
+    public function delegate(string $recipe, array $arguments = null) : self
     {
         $recipeClass = class_exists($recipe) ? $recipe : self::toClassName($recipe);
         try {
@@ -249,7 +245,7 @@ abstract class Recipe extends Cliff\Command
      * @return Codger\Generate\Recipe Itself for chaining.
      * @TODO add some formatting (colours?) so it stands out more.
      */
-    public function info(string $info) : Recipe
+    public function info(string $info) : self
     {
         self::$inout->write("\n$info\n");
         return $this;
@@ -263,7 +259,7 @@ abstract class Recipe extends Cliff\Command
      * @return Codger\Generate\Recipe Itself for chaining.
      * @TODO add some formatting (colours?) so it stands out more.
      */
-    public function error(string $error) : Recipe
+    public function error(string $error) : self
     {
         self::$inout->error("\n$error\n");
         return $this;
