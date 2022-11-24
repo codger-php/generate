@@ -60,7 +60,9 @@ abstract class Recipe extends Cliff\Command
     {
         $reflection = new ReflectionObject($this);
         foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC & ~ReflectionProperty::IS_STATIC) as $property) {
-            $this->set($property->name, $property->getValue($this));
+            if (isset($this->{$property->name})) {
+                $this->set($property->name, $property->getValue($this));
+            }
         }
     }
 
