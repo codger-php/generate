@@ -9,13 +9,13 @@ trait DefaultOptions
      *
      * @var string
      */
-    public $outputDir;
+    public string $outputDir;
 
     /**
      * Whether or not to overwrite existing files.
      *
      * @var bool
      */
-    public $replace = false;
+    public bool $replace = false;
 }
 
