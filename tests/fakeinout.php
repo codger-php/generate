@@ -1,10 +1,8 @@
 <?php
 
-use Gentry\Gentry\Wrapper;
-
-/** Testsuite for Codger\Generate\FakeInOut */
+/** Testsuite for fake in/output */
 return function () : Generator {
-    $object = Wrapper::createObject(Codger\Generate\FakeInOut::class);
+    $object = new Codger\Generate\FakeInOut;
     /** read yields $result === '0' */
     yield function () use ($object) {
         $result = $object->expect('foo');

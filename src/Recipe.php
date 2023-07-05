@@ -2,48 +2,68 @@
 
 namespace Codger\Generate;
 
-use Twig_Environment;
+use Twig\Environment;
 use StdClass;
+use Monolyth\Cliff;
+use ReflectionObject;
+use ReflectionProperty;
+use Closure;
 
 /**
  * Base Recipe class all other recipes should extend.
  */
-abstract class Recipe
+abstract class Recipe extends Cliff\Command
 {
-    /** @var Twig_Environment */
-    protected $twig;
-    /** @var StdClass */
-    protected $variables;
-    /** @var bool */
-    protected $delegated = false;
-    /** @var Codger\Generate\InOut */
-    protected static $inout;
+    use InOutTrait;
+    use DefaultOptions;
+
+    protected string $_template;
+
+    protected stdClass $_variables;
+
+    protected array $_delegated = [];
+
+    protected Closure $_output;
+
+    private Environment $_twig;
 
     /**
-     * Constructor. Recipes must be constructed with a user-supplied
-     * Twig_Environment, since we can't guess how users would like to configure
-     * it (cache dir, loader, debug etc).
+     * Constructor.
      *
-     * @param Twig_Environment $twig
+     * @param array|null $arguments
+     * @return void
      */
-    public function __construct(Twig_Environment $twig)
+    public function __construct(array $arguments = null)
     {
-        $this->variables = new StdClass;
-        $this->twig = $twig;
-        if (!isset(self::$inout)) {
-            self::$inout = new StandardInOut;
-        }
+        parent::__construct($arguments);
+        $this->_variables = new StdClass;
+        self::initInOut();
     }
 
     /**
-     * Set the input/output streams. This is useful for e.g. testing, but also
-     * in other scenarios where you need to reroute input/output.
+     * Set the Twig environment to be used.
      *
-     * @param Codger\Generate\InOut $inout
+     * @param Twig\Environment $_twig
+     * @return void
      */
-    public static function setInOut(InOut $inout) : void
+    protected function setTwigEnvironment(Environment $_twig) : void
     {
-        self::$inout = $inout;
+        $this->_twig = $_twig;
+    }
+
+    /**
+     * Persist all passed options as Twig variables.
+     *
+     * @return void
+     */
+    protected function persistOptionsToTwig() : void
+    {
+        $reflection = new ReflectionObject($this);
+        foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC & ~ReflectionProperty::IS_STATIC) as $property) {
+            if (isset($this->{$property->name})) {
+                $this->set($property->name, $property->getValue($this));
+            }
+        }
     }
 
     /**
@@ -53,9 +73,9 @@ abstract class Recipe
      * @param mixed $value
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function set(string $name, $value) : Recipe
+    public function set(string $name, $value) : self
     {
-        $this->variables->$name = $value;
+        $this->_variables->$name = $value;
         return $this;
     }
 
@@ -63,9 +83,9 @@ abstract class Recipe
      * @param string $name
      * @return mixed
      */
-    public function get(string $name)
+    public function get(string $name) : mixed
     {
-        return $this->variables->$name ?? null;
+        return $this->_variables->$name ?? null;
     }
 
     /**
@@ -75,7 +95,15 @@ abstract class Recipe
      */
     public function render() : string
     {
-        return $this->twig->render($this->template, (array)$this->variables);
+        if (!isset($this->_twig)) {
+            throw new TwigEnvironmentNotSetException("Missing Twig environment in ".get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
+        }
+        if (!isset($this->_template)) {
+            throw new TwigEnvironmentNotSetException("Missing template in ".get_class($this), Command::ERROR_TWIG_ENVIRONMENT_NOT_SET);
+        }
+        $variables = (array)$this->_variables;
+        array_walk($variables, [$this, 'preProcess']);
+        return $this->_twig->render($this->_template, $variables);
     }
 
     /**
@@ -87,7 +115,7 @@ abstract class Recipe
      * @param callable $callback
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function ask(string $question, callable $callback) : Recipe
+    public function ask(string $question, callable $callback) : self
     {
         self::$inout->write("$question ");
         $answer = self::$inout->read();
@@ -96,20 +124,19 @@ abstract class Recipe
     }
 
     /**
-     * Like `Codger\Recipe::ask`, except supplying a list of valid options to
-     * choose from. The _index_ of the selected option is passed to `$callback`.
-     * If the index is a string, it is a shortcut for the full answer.
+     * Like `Codger\Generate\Recipe::ask`, except supplying a list of valid
+     * options to choose from. The _index_ of the selected option is passed to
+     * `$callback`. If the index is a string, it is a shortcut for the full
+     * answer.
      *
      * @param string $question
      * @param array $options
      * @param callable $callback
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function options(string $question, array $options, callable $callback) : Recipe
+    public function options(string $question, array $options, callable $callback) : self
     {
-        if ($question) {
-            self::$inout->write("$question\n\n");
-        }
+        self::$inout->write("$question\n\n");
         foreach ($options as $index => $option) {
             self::$inout->write("[$index]: $option\n");
         }
@@ -131,41 +158,41 @@ abstract class Recipe
      * @param string $filename
      * @return Codger\Generate\Recipe Itself for chaining.
      */
-    public function output(string $filename) : Recipe
+    public function output(string $filename) : self
     {
-        $this->output = function () use ($filename) : void {
+        $this->_output = Closure::fromCallable(function () use ($filename) : void {
             $output = $this->render();
-            if (getenv("CODGER_DRY")) {
+            if (!isset($this->outputDir)) {
                 $output = "\n$filename:\n$output\n";
                 self::$inout->write($output);
             } else {
-                $dir = dirname($filename);
+                $dir = dirname("{$this->outputDir}/$filename");
                 if (file_exists($dir) && !is_dir($dir)) {
                     self::$inout->error("$dir already exists, but is not a directory!");
                 } else {
                     if (!file_exists($dir)) {
                         mkdir($dir, 0755, true);
                     }
-                    $overwrite = (bool)getenv("CODGER_OVERWRITE");
-                    $dump = (bool)getenv("CODGER_DUMP");
-                    $skip = (bool)getenv("CODGER_SKIP");
-                    if (file_exists($filename) && !($overwrite || $dump || $skip)) {
+                    $overwrite = (bool)$this->replace;
+                    $dump = false;
+                    if (file_exists("{$this->outputDir}/$filename") && !$this->replace) {
                         $this->options(
-                            "$filename already exists, overwrite or dump to screen?",
+                            "{$this->outputDir}/$filename already exists, overwrite or dump to screen?",
                             ['o' => 'Overwrite', 'd' => 'Dump', 's' => 'Skip'],
-                            function ($answer) use (&$overwrite) {
+                            function ($answer) use (&$overwrite, &$dump) {
                                 $overwrite = $answer == 'o';
+                                $dump = $answer == 'd';
                             }
                         );
                     }
-                    if (!file_exists($filename) || $overwrite) {
-                        file_put_contents($filename, $output);
+                    if (!file_exists("{$this->outputDir}/$filename") || $overwrite) {
+                        file_put_contents("{$this->outputDir}/$filename", $output);
                     } elseif ($dump) {
-                        self::$inout->write("\n$filename:\n$output\n");
+                        self::$inout->write("\n{$this->outputDir}/$filename:\n$output\n");
                     }
                 }
             }
-        };
+        });
         return $this;
     }
 
@@ -176,24 +203,39 @@ abstract class Recipe
      */
     public function process() : void
     {
-        if (isset($this->output)) {
-            $this->output->call($this);
-        } elseif (!$this->delegated) {
+        if (isset($this->_output)) {
+            $this->_output->call($this);
+        } elseif (!$this->_delegated) {
             self::$inout->error("Recipe is missing a call to `output` and did not delegate anything, not very useful probably...\n");
         }
+        array_walk($this->_delegated, function ($recipe) {
+            self::$inout->write(sprintf(
+                "  > Delegating to %s...\n",
+                get_class($recipe)
+            ));
+            $recipe->execute();
+            $recipe->process();
+        });
     }
 
     /**
      * Delegate to a sub-recipe.
      *
-     * @param string $recipe The name of the recipe to delegate to.
-     * @param mixed ...$args Extra arguments.
+     * @param string $recipe The name of the recipe to delegate to. This can be
+     *  the CLI name, or the actual classname.
+     * @param array $arguments|null Arguments.
      * @return Codger\Generate\Recipe Itself for chaining.
+     * @throws Codger\Generate\RecipeNotFoundException
      */
-    public function delegate(string $recipe, ...$args) : Recipe
+    public function delegate(string $recipe, array $arguments = null) : self
     {
-        (new Bootstrap($recipe))->run(...$args);
-        $this->delegated = true;
+        $recipeClass = class_exists($recipe) ? $recipe : self::toClassName($recipe);
+        try {
+            $recipe = new $recipeClass($arguments);
+        } catch (Error $e) {
+            throw new RecipeNotFoundException($recipe);
+        }
+        $this->_delegated[] = $recipe;
         return $this;
     }
 
@@ -205,7 +247,7 @@ abstract class Recipe
      * @return Codger\Generate\Recipe Itself for chaining.
      * @TODO add some formatting (colours?) so it stands out more.
      */
-    public function info(string $info) : Recipe
+    public function info(string $info) : self
     {
         self::$inout->write("\n$info\n");
         return $this;
@@ -219,10 +261,48 @@ abstract class Recipe
      * @return Codger\Generate\Recipe Itself for chaining.
      * @TODO add some formatting (colours?) so it stands out more.
      */
-    public function error(string $error) : Recipe
+    public function error(string $error) : self
     {
-        self::$inout->write("\n$error\n");
+        self::$inout->error("\n$error\n");
         return $this;
+    }
+
+    /**
+     * Execute and process the recipe.
+     *
+     * @return void
+     */
+    public function execute() : void
+    {
+        parent::execute();
+        $this->process();
+    }
+
+    /**
+     * Convert the CLI recipe into a fully qualified classname.
+     *
+     * @param string $recipe
+     * @return string
+     */
+    public static function toClassName(string $recipe) : string
+    {
+        return preg_replace('@\\\\Command$@', '', self::toPhpName($recipe));
+    }
+
+    /**
+     * Internal helper to recursively render passed variables.
+     *
+     * @param mixed &$element
+     * @return void
+     */
+    private function preProcess(&$element) : void
+    {
+        if (is_object($element) && method_exists($element, 'render')) {
+            $element = $element->render();
+        }
+        if (is_array($element)) {
+            array_walk($element, [$this, 'preProcess']);
+        }
     }
 }
 
