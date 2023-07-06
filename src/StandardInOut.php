@@ -16,10 +16,18 @@ class StandardInOut implements InOut
      */
     public function read(string $format = null) : string
     {
-        if (isset($format)) {
-            return fscanf(STDIN, $format)[0];
-        }
-        return trim(fgets(STDIN));
+        $input = null;
+        do {
+            if (isset($format)) {
+                $input = fscanf(STDIN, $format);
+                if (isset($input)) {
+                    $input = $input[0];
+                }
+            } else {
+                $input = trim(fgets(STDIN));
+            }
+        } while (!isset($input));
+        return "$input";
     }
 
     /**
