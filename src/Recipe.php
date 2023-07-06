@@ -214,7 +214,6 @@ abstract class Recipe extends Cliff\Command
                 get_class($recipe)
             ));
             $recipe->execute();
-            $recipe->process();
         });
     }
 
