@@ -61,7 +61,6 @@ class Command extends Cliff\Command
             throw new RecipeIsNotARecipeException("The recipe `$recipeClass` does not extend `Codger\\Generate\\Recipe`; aborting.", self::ERROR_RECIPE_IS_NOT_A_RECIPE);
         }
         $recipe->execute();
-        $recipe->process();
     }
 }
 
