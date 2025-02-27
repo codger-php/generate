@@ -11,7 +11,7 @@ class Chef extends Recipe
 
     protected string $_template = 'main.html.twig';
 
-    public function __invoke(string $title = null)
+    public function __invoke(?string $title = null)
     {
         if (isset($title)) {
             $this->setTitle($title);
