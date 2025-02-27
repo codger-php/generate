@@ -14,7 +14,7 @@ class StandardInOut implements InOut
      * @param string|null $format
      * @return string
      */
-    public function read(string $format = null) : string
+    public function read(?string $format = null) : string
     {
         $input = null;
         do {
