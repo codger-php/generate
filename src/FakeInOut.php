@@ -7,10 +7,9 @@ namespace Codger\Generate;
  */
 class FakeInOut implements InOut
 {
-    /** @var array */
-    private $stack = [];
-    /** @var string */
-    private $output = '';
+    private array $stack = [];
+
+    private string $output = '';
 
     /**
      * Fake input reader. Shifts elements off the stack.
