@@ -33,7 +33,7 @@ abstract class Recipe extends Cliff\Command
      * @param array|null $arguments
      * @return void
      */
-    public function __construct(array $arguments = null)
+    public function __construct(?array $arguments = null)
     {
         parent::__construct($arguments);
         $this->_variables = new StdClass;
@@ -226,7 +226,7 @@ abstract class Recipe extends Cliff\Command
      * @return Codger\Generate\Recipe Itself for chaining.
      * @throws Codger\Generate\RecipeNotFoundException
      */
-    public function delegate(string $recipe, array $arguments = null) : self
+    public function delegate(string $recipe, ?array $arguments = null) : self
     {
         $recipeClass = class_exists($recipe) ? $recipe : self::toClassName($recipe);
         try {
