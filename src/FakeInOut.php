@@ -18,7 +18,7 @@ class FakeInOut implements InOut
      * @param string|null $format Optional format
      * @return string
      */
-    public function read(string $format = null) : string
+    public function read(?string $format = null) : string
     {
         $input = array_shift($this->stack);
         if (isset($format, $input)) {
